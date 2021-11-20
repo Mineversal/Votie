@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "266768349104",
+    "project_id": "mineversal-dev",
+    "storage_bucket": "mineversal-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266768349104:android:413791a0388f07660c4875",
+        "android_client_info": {
+          "package_name": "com.mineversal.votie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266768349104-4avedd2unlp7qgsfi6kjoas14aeof8do.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5pMdhjqEeNERao5PQXHnbrVXa-z_UIGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266768349104-4avedd2unlp7qgsfi6kjoas14aeof8do.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
