@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:votie/ui/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splashscreen';
@@ -20,7 +21,7 @@ class _SplashScreen extends State<SplashScreen> {
   splashScreen() {
     var duration = const Duration(seconds: 5);
     return Timer(duration, () {
-      //Navigator.pushReplacementNamed(context, Menu.routeName);
+      Navigator.pushReplacementNamed(context, Login.routeName);
     });
   }
 

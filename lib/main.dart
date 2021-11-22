@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:votie/ui/login_page.dart';
+import 'package:votie/ui/register_page.dart';
 import 'package:votie/ui/splashscreen.dart';
 
 void main() async {
@@ -20,9 +22,9 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.routeName,
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
+        Login.routeName: (context) => const Login(),
+        Register.routeName: (context) => const Register(),
         /*
-        Menu.routeName: (context) => const Menu(),
-        Setting.routeName: (context) => const Setting(),
         RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
             restaurant:
                 ModalRoute.of(context)?.settings.arguments as Restaurant),
