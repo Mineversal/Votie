@@ -21,12 +21,12 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
         /*
-          Menu.routeName: (context) => const Menu(),
-          Setting.routeName: (context) => const Setting(),
-          RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
-              restaurant:
-                  ModalRoute.of(context)?.settings.arguments as Restaurant),
-          */
+        Menu.routeName: (context) => const Menu(),
+        Setting.routeName: (context) => const Setting(),
+        RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
+            restaurant:
+                ModalRoute.of(context)?.settings.arguments as Restaurant),
+        */
       },
     );
   }
