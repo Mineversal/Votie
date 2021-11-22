@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:votie/ui/login_page.dart';
+import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
 import 'package:votie/ui/splashscreen.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.routeName: (context) => const SplashScreen(),
         Login.routeName: (context) => const Login(),
         Register.routeName: (context) => const Register(),
+        Menu.routeName: (context) => const Menu(),
         /*
         RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
             restaurant:

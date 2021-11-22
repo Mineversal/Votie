@@ -1,9 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   static const routeName = '/login';
   const Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final _auth = FirebaseAuth.instance;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +31,9 @@ class Login extends StatelessWidget {
           restorationId: 'text_field_demo_list_view',
           padding: const EdgeInsets.all(16),
           children: [
+            _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Container(),
             Image.asset(
               "assets/images/logo.png",
               width: 200,
@@ -25,9 +42,10 @@ class Login extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
+                controller: _emailController,
                 textInputAction: TextInputAction.next,
                 restorationId: 'email_address_text_field',
                 placeholder: 'Masukkan Email',
@@ -36,9 +54,10 @@ class Login extends StatelessWidget {
                 autocorrect: false,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
+                controller: _passwordController,
                 textInputAction: TextInputAction.next,
                 restorationId: 'login_password_text_field',
                 placeholder: 'Masukkan Password',
@@ -50,7 +69,7 @@ class Login extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoButton.filled(
-                onPressed: () {},
+                onPressed: () => login(),
                 child: const Text("Login"),
               ),
             ),
@@ -67,5 +86,25 @@ class Login extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void login() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      Navigator.pushReplacementNamed(context, Menu.routeName);
+    } catch (e) {
+      final snackbar = SnackBar(content: Text(e.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 }
