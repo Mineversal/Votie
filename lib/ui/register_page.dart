@@ -40,6 +40,17 @@ class Register extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
                 textInputAction: TextInputAction.next,
+                restorationId: 'username_text_field',
+                placeholder: 'Masukkan Username',
+                keyboardType: TextInputType.name,
+                clearButtonMode: OverlayVisibilityMode.editing,
+                autocorrect: false,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: CupertinoTextField(
+                textInputAction: TextInputAction.next,
                 restorationId: 'email_address_text_field',
                 placeholder: 'Masukkan Email',
                 keyboardType: TextInputType.emailAddress,
