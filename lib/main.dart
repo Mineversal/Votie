@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
       debugShowCheckedModeBanner: false,
       initialRoute: SplashScreen.routeName,
+      navigatorKey: navigatorKey,
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
         Login.routeName: (context) => const Login(),
