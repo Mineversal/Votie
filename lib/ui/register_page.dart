@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,6 +15,8 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _auth = FirebaseAuth.instance;
+  final _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -41,9 +45,10 @@ class _RegisterState extends State<Register> {
             const SizedBox(
               height: 20,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
+                controller: _nameController,
                 textInputAction: TextInputAction.next,
                 restorationId: 'name_text_field',
                 placeholder: 'Masukkan Nama',
@@ -52,9 +57,10 @@ class _RegisterState extends State<Register> {
                 autocorrect: false,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoTextField(
+                controller: _usernameController,
                 textInputAction: TextInputAction.next,
                 restorationId: 'username_text_field',
                 placeholder: 'Masukkan Username',
@@ -90,26 +96,7 @@ class _RegisterState extends State<Register> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: CupertinoButton.filled(
-                onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    final email = _emailController.text;
-                    final password = _passwordController.text;
-
-                    await _auth.createUserWithEmailAndPassword(
-                        email: email, password: password);
-                    Navigator.pop(context);
-                  } catch (e) {
-                    final snackbar = SnackBar(content: Text(e.toString()));
-                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                  } finally {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
+                onPressed: () => register(),
                 child: const Text("Register"),
               ),
             ),
@@ -128,8 +115,56 @@ class _RegisterState extends State<Register> {
     );
   }
 
+  void register() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) => postDetailsToFirestore())
+          .catchError((e) {
+        final snackbar = SnackBar(content: Text(e.toString()));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      });
+      Navigator.pop(context);
+    } catch (e) {
+      final snackbar = SnackBar(content: Text(e.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  postDetailsToFirestore() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.username = _usernameController.text;
+    userModel.name = _nameController.text;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+
+    const snackbar = SnackBar(content: Text("Register Succesfully"));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
   @override
   void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
