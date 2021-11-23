@@ -65,7 +65,16 @@ class _MenuState extends State<Menu> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      stateManagement: false,
+      decoration: NavBarDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.09),
+            spreadRadius: 5,
+            blurRadius: 20,
+            offset: const Offset(0, -2), // changes position of shadow
+          ),
+        ],
+      ),
     );
   }
 
