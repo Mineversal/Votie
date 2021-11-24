@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:votie/common/style.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
 
@@ -21,68 +24,102 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        automaticallyImplyLeading: false,
-        middle: Text("Login"),
-      ),
-      child: SafeArea(
-        child: ListView(
-          restorationId: 'text_field_demo_list_view',
-          padding: const EdgeInsets.all(16),
-          children: [
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Container(),
-            Image.asset(
-              "assets/images/logo.png",
-              width: 200,
-              height: 200,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CupertinoTextField(
-                controller: _emailController,
-                textInputAction: TextInputAction.next,
-                restorationId: 'email_address_text_field',
-                placeholder: 'Masukkan Email',
-                keyboardType: TextInputType.emailAddress,
-                clearButtonMode: OverlayVisibilityMode.editing,
-                autocorrect: false,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    width: 35.0,
+                  ),
+                  Text(
+                    'Votie',
+                    style: GoogleFonts.lato(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  )
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CupertinoTextField(
-                controller: _passwordController,
-                textInputAction: TextInputAction.next,
-                restorationId: 'login_password_text_field',
-                placeholder: 'Masukkan Password',
-                clearButtonMode: OverlayVisibilityMode.editing,
-                obscureText: true,
-                autocorrect: false,
+              Container(
+                margin: const EdgeInsets.only(top: 80.0, left: 10),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Sign In,',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CupertinoButton.filled(
-                onPressed: () => login(),
-                child: const Text("Login"),
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'and start voting now',
+                  style: GoogleFonts.poppins(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CupertinoButton(
+              Container(
+                color: const Color(0xFFF4F4F4),
+                margin: const EdgeInsets.only(top: 30.0),
+                padding: const EdgeInsets.only(
+                    left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Email',
+                      hintStyle: textRegularGray),
+                  controller: _emailController,
+                  autocorrect: false,
+                ),
+              ),
+              Container(
+                color: const Color(0xFFF4F4F4),
+                margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                padding: const EdgeInsets.only(
+                    left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
+                child: TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Password',
+                      hintStyle: textRegularGray),
+                  controller: _passwordController,
+                  autocorrect: false,
+                ),
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(height: 50),
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : () => login(),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 25.0,
+                          width: 25.0,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Sign in'),
+                ),
+              ),
+              TextButton(
+                child: const Text('Dont Have an Account? Register'),
                 onPressed: () {
                   Navigator.pushNamed(context, Register.routeName);
                 },
-                child: const Text("Dont Have an Account? Register"),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

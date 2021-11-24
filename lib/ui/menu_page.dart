@@ -46,6 +46,11 @@ class _MenuState extends State<Menu> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
       decoration: NavBarDecoration(
         boxShadow: [
           BoxShadow(
@@ -93,5 +98,11 @@ class _MenuState extends State<Menu> {
         inactiveColorPrimary: colorGray,
       ),
     ];
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
