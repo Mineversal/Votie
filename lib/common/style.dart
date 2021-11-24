@@ -53,11 +53,17 @@ TextStyle textRegularGray = GoogleFonts.poppins(
 TextStyle textMediumBlack = GoogleFonts.nunito(
     color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w600);
 
+TextStyle textMediumWhite = GoogleFonts.nunito(
+    color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.normal);
+
 TextStyle textBoldBlack = GoogleFonts.poppins(
     color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w600);
 
 TextStyle titleBoldOrange = GoogleFonts.nunito(
     color: colorDarkOrange, fontSize: 26.0, fontWeight: FontWeight.bold);
+
+TextStyle titleBoldWhite = GoogleFonts.nunito(
+    color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.bold);
 
 TextStyle titleBoldBlack = GoogleFonts.nunito(
     color: Colors.black, fontSize: 20.0, fontWeight: FontWeight.bold);

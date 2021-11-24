@@ -106,7 +106,7 @@ class Home extends StatelessWidget {
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ListVoteItem(),
+              child: ListRecentVote(),
             ),
           ),
         ],
@@ -115,7 +115,7 @@ class Home extends StatelessWidget {
   }
 }
 
-class ListVoteItem extends StatelessWidget {
+class ListRecentVote extends StatelessWidget {
   final List<String> _dummyData = [
     'Tujuan liburan akhir tahun',
     'Pemilihan ketua kelas',
@@ -123,7 +123,7 @@ class ListVoteItem extends StatelessWidget {
     'Pilih band favorit',
   ];
 
-  ListVoteItem({Key? key}) : super(key: key);
+  ListRecentVote({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
