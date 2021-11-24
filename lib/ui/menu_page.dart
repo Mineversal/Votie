@@ -39,25 +39,6 @@ class _MenuState extends State<Menu> {
     });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Center(
-  //     child: Column(children: [
-  //       const Text("Kamu Berhasil Login"),
-  //       Text(userModel.name.toString()),
-  //       Text(userModel.username.toString()),
-  //       Text(userModel.email.toString()),
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(vertical: 8),
-  //         child: CupertinoButton.filled(
-  //           onPressed: () => logout(),
-  //           child: const Text("Logout"),
-  //         ),
-  //       ),
-  //     ]),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(

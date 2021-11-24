@@ -1,19 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
-import 'package:votie/ui/splashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +22,9 @@ class MyApp extends StatelessWidget {
       title: 'Votie',
       theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.routeName,
+      initialRoute: currentUser == null ? Login.routeName : Menu.routeName,
       navigatorKey: navigatorKey,
       routes: {
-        SplashScreen.routeName: (context) => const SplashScreen(),
         Login.routeName: (context) => const Login(),
         Register.routeName: (context) => const Register(),
         Menu.routeName: (context) => const Menu(),
