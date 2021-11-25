@@ -165,6 +165,26 @@ class _RegisterState extends State<Register> {
     try {
       final email = _emailController.text;
       final password = _passwordController.text;
+      final username = _usernameController.text;
+      final name = _nameController.text;
+
+      if (name.isEmpty || username.isEmpty) {
+        throw Exception('Please fill up all field');
+      }
+
+      if (username.contains(' ')) {
+        throw Exception('Username cannot contains space');
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        if (querySnapshot.size > 0) {
+          throw Exception('Username already used');
+        }
+      });
 
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
@@ -173,7 +193,6 @@ class _RegisterState extends State<Register> {
         final snackbar = SnackBar(content: Text(e.toString()));
         ScaffoldMessenger.of(context).showSnackBar(snackbar);
       });
-      Navigator.pop(context);
     } catch (e) {
       final snackbar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -202,6 +221,7 @@ class _RegisterState extends State<Register> {
 
     const snackbar = SnackBar(content: Text("Register Succesfully"));
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    Navigator.pop(context);
   }
 
   @override
