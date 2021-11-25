@@ -121,8 +121,48 @@ class Profile extends StatelessWidget {
     );
   }
 
-  Future<void> logout(context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigation.intentAndReplace(Login.routeName);
+  Future<void> logout(context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Are you sure?',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        content: Text(
+          'Do you want Logout?',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        actions: [
+          TextButton(
+            child: const Text("CANCEL"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: TextButton.styleFrom(
+              primary: colorBlue,
+              backgroundColor: Colors.transparent,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 1),
+          ElevatedButton(
+            child: const Text("LOGOUT"),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigation.intentAndReplace(Login.routeName);
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: colorRed,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
+    );
   }
 }

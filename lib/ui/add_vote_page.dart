@@ -10,69 +10,72 @@ class AddVote extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: SvgPicture.asset(
-                    'assets/images/bg_green.svg',
-                    fit: BoxFit.fill,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 1.125,
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: SvgPicture.asset(
+                      'assets/images/bg_green.svg',
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(
-                          bottom: 2.0, top: 60.0, right: 20.0, left: 20.0),
-                      child: Text(
-                        'Start your voting campaign',
-                        style: titleBoldWhite,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(
-                          bottom: 15.0, right: 20.0, left: 20.0),
-                      child: Text(
-                        'And get best decision',
-                        style: textMediumWhite,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: const EdgeInsets.only(
-                          bottom: 2.0, right: 20.0, left: 20.0),
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Create Voting Now'),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: colorGreen,
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(
+                            bottom: 2.0, top: 60.0, right: 20.0, left: 20.0),
+                        child: Text(
+                          'Start your voting campaign',
+                          style: titleBoldWhite,
                         ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(
+                            bottom: 15.0, right: 20.0, left: 20.0),
+                        child: Text(
+                          'And get best decision',
+                          style: textMediumWhite,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(
+                            bottom: 2.0, right: 20.0, left: 20.0),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Create Voting Now'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: colorGreen,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.all(20.0),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Vote You Made',
+                  style: titleMediumBlack,
                 ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.all(20.0),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Vote You Made',
-                style: titleMediumBlack,
               ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: ListYourVote(),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: ListYourVote(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -7,7 +7,6 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/add_vote_page.dart';
 import 'package:votie/ui/home_page.dart';
-import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/profile_page.dart';
 import 'package:votie/common/style.dart';
 
@@ -71,50 +70,6 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  Future<dynamic> logout() {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Are you sure?',
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        content: Text(
-          'Do you want Logout?',
-          style: Theme.of(context).textTheme.subtitle2,
-        ),
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        actions: [
-          TextButton(
-            child: const Text("CANCEL"),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            style: TextButton.styleFrom(
-              primary: colorBlue,
-              backgroundColor: Colors.transparent,
-              textStyle: Theme.of(context).textTheme.subtitle1,
-            ),
-          ),
-          const SizedBox(width: 2),
-          ElevatedButton(
-            child: const Text("LOGOUT"),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, Login.routeName);
-            },
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-              backgroundColor: colorRed,
-              textStyle: Theme.of(context).textTheme.subtitle1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<dynamic> exitDialog() {
     return showDialog(
       context: context,
@@ -141,7 +96,7 @@ class _MenuState extends State<Menu> {
               textStyle: Theme.of(context).textTheme.subtitle1,
             ),
           ),
-          const SizedBox(width: 2),
+          const SizedBox(width: 1),
           ElevatedButton(
             child: const Text("EXIT"),
             onPressed: () {
@@ -153,6 +108,7 @@ class _MenuState extends State<Menu> {
               textStyle: Theme.of(context).textTheme.subtitle1,
             ),
           ),
+          const SizedBox(width: 4),
         ],
       ),
     );

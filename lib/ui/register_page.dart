@@ -211,10 +211,10 @@ class _RegisterState extends State<Register> {
 
     UserModel userModel = UserModel();
 
-    userModel.email = user!.email!.toLowerCase();
+    userModel.email = user!.email;
     userModel.uid = user.uid;
     userModel.username = _usernameController.text.toLowerCase();
-    userModel.name = _nameController.text.toLowerCase();
+    userModel.name = _nameController.text;
 
     await firebaseFirestore
         .collection("users")
