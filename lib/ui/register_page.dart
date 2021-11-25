@@ -180,7 +180,7 @@ class _RegisterState extends State<Register> {
 
       await FirebaseFirestore.instance
           .collection('users')
-          .where('username', isEqualTo: username)
+          .where('username', isEqualTo: username.toLowerCase())
           .get()
           .then((QuerySnapshot querySnapshot) {
         if (querySnapshot.size > 0) {
@@ -211,10 +211,10 @@ class _RegisterState extends State<Register> {
 
     UserModel userModel = UserModel();
 
-    userModel.email = user!.email;
+    userModel.email = user!.email!.toLowerCase();
     userModel.uid = user.uid;
-    userModel.username = _usernameController.text;
-    userModel.name = _nameController.text;
+    userModel.username = _usernameController.text.toLowerCase();
+    userModel.name = _nameController.text.toLowerCase();
 
     await firebaseFirestore
         .collection("users")
