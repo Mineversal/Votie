@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:votie/common/style.dart';
@@ -24,102 +25,108 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/logo.svg',
-                      width: 35.0,
-                    ),
-                    Text(
-                      'Votie',
-                      style: GoogleFonts.lato(
-                          fontSize: 30, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 80.0, left: 10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Sign In,',
-                    style: GoogleFonts.poppins(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w600,
-                    ),
+    return WillPopScope(
+      onWillPop: () {
+        SystemNavigator.pop();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/logo.svg',
+                        width: 35.0,
+                      ),
+                      Text(
+                        'Votie',
+                        style: GoogleFonts.lato(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      )
+                    ],
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'and start voting now',
-                    style: GoogleFonts.poppins(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.w400,
+                  Container(
+                    margin: const EdgeInsets.only(top: 80.0, left: 10),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Sign In,',
+                      style: GoogleFonts.poppins(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  color: const Color(0xFFF4F4F4),
-                  margin: const EdgeInsets.only(top: 30.0),
-                  padding: const EdgeInsets.only(
-                      left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                        hintStyle: textRegularGray),
-                    controller: _emailController,
-                    autocorrect: false,
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'and start voting now',
+                      style: GoogleFonts.poppins(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
-                ),
-                Container(
-                  color: const Color(0xFFF4F4F4),
-                  margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                  padding: const EdgeInsets.only(
-                      left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Password',
-                        hintStyle: textRegularGray),
-                    controller: _passwordController,
-                    autocorrect: false,
+                  Container(
+                    color: const Color(0xFFF4F4F4),
+                    margin: const EdgeInsets.only(top: 30.0),
+                    padding: const EdgeInsets.only(
+                        left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
+                    child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Email',
+                          hintStyle: textRegularGray),
+                      controller: _emailController,
+                      autocorrect: false,
+                    ),
                   ),
-                ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(height: 50),
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : () => login(),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 25.0,
-                            width: 25.0,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('Sign in'),
+                  Container(
+                    color: const Color(0xFFF4F4F4),
+                    margin: const EdgeInsets.only(top: 10.0, bottom: 20.0),
+                    padding: const EdgeInsets.only(
+                        left: 20.0, top: 5.0, right: 5.0, bottom: 5.0),
+                    child: TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Password',
+                          hintStyle: textRegularGray),
+                      controller: _passwordController,
+                      autocorrect: false,
+                    ),
                   ),
-                ),
-                TextButton(
-                  child: const Text('Dont Have an Account? Register'),
-                  onPressed: () {
-                    Navigator.pushNamed(context, Register.routeName);
-                  },
-                ),
-              ],
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.tightFor(height: 50),
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : () => login(),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 25.0,
+                              width: 25.0,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text('Sign in'),
+                    ),
+                  ),
+                  TextButton(
+                    child: const Text('Dont Have an Account? Sign Up'),
+                    onPressed: () {
+                      Navigator.pushNamed(context, Register.routeName);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

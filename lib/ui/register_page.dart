@@ -147,7 +147,7 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 TextButton(
-                  child: const Text('Dont Have an Account? Register'),
+                  child: const Text('Have an Account? Sign In'),
                   onPressed: () {
                     Navigator.pushNamed(context, Login.routeName);
                   },
