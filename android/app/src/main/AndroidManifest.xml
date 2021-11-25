@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mineversal.votie">
    <application
-        android:label="votie"
+        android:label="Votie"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

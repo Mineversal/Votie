@@ -1,6 +1,6 @@
 {
-    "name": "votie",
-    "short_name": "votie",
+    "name": "Votie",
+    "short_name": "Votie",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
