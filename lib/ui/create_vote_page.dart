@@ -1,12 +1,19 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/option_model.dart';
+import 'package:votie/data/model/poll_model.dart';
+import 'package:votie/data/model/user_model.dart';
 
 class CreateVote extends StatefulWidget {
   static const routeName = '/createVote';
+  final UserModel userModel;
 
-  const CreateVote({Key? key}) : super(key: key);
+  const CreateVote({Key? key, required this.userModel}) : super(key: key);
 
   @override
   State<CreateVote> createState() => _CreateVoteState();
@@ -16,13 +23,76 @@ class _CreateVoteState extends State<CreateVote> {
   var _isMultivote = false;
   var _isAnonvote = false;
   var _isLoading = false;
-  String _selectedDate = 'Ending Date';
+  var _itemCount = 2;
+
+  final _titleController = TextEditingController();
+  final _descController = TextEditingController();
+
+  DateTime? _selectedDate;
+  List<OptionModel> options = [];
 
   Color getColor(Set<MaterialState> states) {
     if (states.contains(MaterialState.selected)) {
       return colorGreen;
     }
     return colorGray;
+  }
+
+  saveOption(int index, String text) {
+    OptionModel option =
+        OptionModel(id: index, images: 'not-implemented-yet', title: text);
+    if (options.length >= index + 1) {
+      options[index] = option;
+    } else {
+      options.insert(index, option);
+    }
+  }
+
+  addPoll() async {
+    _isLoading = true;
+    List<OptionModel> newOptions = [];
+    var optionId = 1;
+    for (var option in options) {
+      if (option.title.isNotEmpty) {
+        newOptions.add(OptionModel(
+            title: option.title, images: option.images, id: optionId));
+        optionId++;
+      }
+    }
+
+    var db = FirebaseFirestore.instance;
+    CollectionReference polls = db.collection('polls');
+
+    var id = polls.doc().id;
+    PollModel poll = PollModel(
+        id: id,
+        creator: widget.userModel.username,
+        title: _titleController.text,
+        description: _descController.text,
+        images: "not-implemented-yet",
+        show: true,
+        end: _selectedDate);
+
+    try {
+      await polls.doc(id).set(poll.toMap()).then((value) {
+        var optionsCollection = polls.doc(id).collection('options');
+        var batch = db.batch();
+
+        for (int i = 0; i < newOptions.length; i++) {
+          var ref = optionsCollection.doc('${i + 1}');
+          batch.set(ref, newOptions[i].toMap());
+        }
+
+        batch
+            .commit()
+            .then((value) => Navigation.back())
+            .catchError((error) => print(error));
+      }).catchError((error) => print(error));
+    } catch (e) {
+      print(e);
+    } finally {
+      _isLoading = false;
+    }
   }
 
   @override
@@ -70,6 +140,7 @@ class _CreateVoteState extends State<CreateVote> {
                     children: [
                       TextField(
                         autocorrect: false,
+                        controller: _titleController,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Title',
@@ -81,6 +152,7 @@ class _CreateVoteState extends State<CreateVote> {
                       ),
                       TextField(
                         autocorrect: false,
+                        controller: _descController,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Description',
@@ -96,7 +168,9 @@ class _CreateVoteState extends State<CreateVote> {
                         alignment: Alignment.centerLeft,
                         child: TextButton(
                           child: Text(
-                            _selectedDate,
+                            _selectedDate == null
+                                ? 'Ending Date'
+                                : _selectedDate.toString(),
                             style: textMedium.apply(color: colorGray),
                           ),
                           onPressed: () {
@@ -104,7 +178,7 @@ class _CreateVoteState extends State<CreateVote> {
                                 showTitleActions: true,
                                 minTime: DateTime.now(), onConfirm: (date) {
                               setState(() {
-                                _selectedDate = date.toString();
+                                _selectedDate = date;
                               });
                             },
                                 currentTime: DateTime.now(),
@@ -171,7 +245,57 @@ class _CreateVoteState extends State<CreateVote> {
                     ],
                   ),
                 ),
-                const Flexible(child: OptionList()),
+                Flexible(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.06),
+                        spreadRadius: 5,
+                        blurRadius: 20,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                  margin:
+                      const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _itemCount,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          TextField(
+                            autocorrect: false,
+                            onChanged: (text) {
+                              if (index == _itemCount - 1) {
+                                setState(() {
+                                  _itemCount++;
+                                });
+                              }
+                              saveOption(index, text);
+                            },
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: '$index. Enter an Option',
+                                hintStyle: textMedium.apply(color: colorGray)),
+                          ),
+                          index != _itemCount - 1
+                              ? const Divider(
+                                  height: 10.0,
+                                  thickness: 0.5,
+                                )
+                              : Container(),
+                        ],
+                      );
+                    },
+                  ),
+                )),
                 Container(
                   margin: const EdgeInsets.symmetric(
                       vertical: 30.0, horizontal: 20.0),
@@ -181,7 +305,7 @@ class _CreateVoteState extends State<CreateVote> {
                       style: ElevatedButton.styleFrom(
                         primary: colorGreen,
                       ),
-                      onPressed: _isLoading ? null : () => {},
+                      onPressed: _isLoading ? null : () => {addPoll()},
                       child: _isLoading
                           ? const SizedBox(
                               height: 25.0,
@@ -198,78 +322,6 @@ class _CreateVoteState extends State<CreateVote> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class OptionList extends StatefulWidget {
-  const OptionList({Key? key}) : super(key: key);
-
-  @override
-  State<OptionList> createState() => _OptionListState();
-}
-
-class _OptionListState extends State<OptionList> {
-  var _itemCount = 2;
-  Map<int, String> options = {};
-
-  void saveOption(int index, String text) {
-    if (text.isNotEmpty) {
-      options[index] = text;
-    } else {
-      options.remove(index);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.06),
-            spreadRadius: 5,
-            blurRadius: 20,
-            offset: const Offset(2, 2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
-      margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: _itemCount,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              TextField(
-                autocorrect: false,
-                onChanged: (text) {
-                  if (index == _itemCount - 1) {
-                    setState(() {
-                      _itemCount++;
-                    });
-                  }
-                  saveOption(index, text);
-                },
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '${index + 1}. Enter an Option',
-                    hintStyle: textMedium.apply(color: colorGray)),
-              ),
-              index != _itemCount - 1
-                  ? const Divider(
-                      height: 10.0,
-                      thickness: 0.5,
-                    )
-                  : Container(),
-            ],
-          );
-        },
       ),
     );
   }

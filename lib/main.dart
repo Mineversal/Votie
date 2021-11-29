@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:votie/common/navigation.dart';
+import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
@@ -29,7 +30,10 @@ class MyApp extends StatelessWidget {
         Login.routeName: (context) => const Login(),
         Register.routeName: (context) => const Register(),
         Menu.routeName: (context) => const Menu(),
-        CreateVote.routeName: (context) => const CreateVote(),
+        CreateVote.routeName: (context) => CreateVote(
+              userModel:
+                  ModalRoute.of(context)?.settings.arguments as UserModel,
+            ),
         /*
         RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
             restaurant:

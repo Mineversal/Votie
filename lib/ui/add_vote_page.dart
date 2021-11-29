@@ -56,7 +56,8 @@ class AddVote extends StatelessWidget {
                             bottom: 2.0, right: 20.0, left: 20.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigation.intent(CreateVote.routeName);
+                            Navigation.intentWithData(
+                                CreateVote.routeName, userModel);
                           },
                           child: const Text('Create Voting Now'),
                           style: ElevatedButton.styleFrom(
