@@ -116,8 +116,8 @@ class _MenuState extends State<Menu> {
 
   List<Widget> _buildScreens() {
     return [
-      const Home(),
-      const AddVote(),
+      Home(userModel: userModel),
+      AddVote(userModel: userModel),
       Profile(userModel: userModel),
     ];
   }
