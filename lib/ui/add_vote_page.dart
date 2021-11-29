@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
+import 'package:votie/ui/create_vote_page.dart';
 
 class AddVote extends StatelessWidget {
   final UserModel userModel;
@@ -45,7 +47,7 @@ class AddVote extends StatelessWidget {
                             bottom: 15.0, right: 20.0, left: 20.0),
                         child: Text(
                           'And get best decision',
-                          style: textMediumWhite,
+                          style: textMedium.apply(color: Colors.white),
                         ),
                       ),
                       Container(
@@ -53,7 +55,9 @@ class AddVote extends StatelessWidget {
                         margin: const EdgeInsets.only(
                             bottom: 2.0, right: 20.0, left: 20.0),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigation.intent(CreateVote.routeName);
+                          },
                           child: const Text('Create Voting Now'),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.white,
@@ -153,7 +157,7 @@ class ListYourVote extends StatelessWidget {
                             color: getSoftColorByIndex(index),
                             child: Center(
                               child: Text(
-                                title[0],
+                                title[0].toString().toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.bold,
@@ -171,7 +175,7 @@ class ListYourVote extends StatelessWidget {
                                   margin: const EdgeInsets.only(bottom: 5.0),
                                   child: Text(
                                     title,
-                                    style: textMediumBlack,
+                                    style: textMedium,
                                   ),
                                 ),
                                 Row(
@@ -186,7 +190,7 @@ class ListYourVote extends StatelessWidget {
                                     ),
                                     Text(
                                       '29 Voter',
-                                      style: textRegularGray,
+                                      style: textRegular,
                                     ),
                                     Container(
                                       margin: const EdgeInsets.only(
@@ -199,7 +203,7 @@ class ListYourVote extends StatelessWidget {
                                     ),
                                     Text(
                                       '3 Option',
-                                      style: textRegularGray,
+                                      style: textRegular,
                                     ),
                                   ],
                                 ),

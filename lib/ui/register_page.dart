@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Name',
-                        hintStyle: textRegularGray),
+                        hintStyle: textRegular),
                     controller: _nameController,
                     autocorrect: false,
                   ),
@@ -96,7 +96,7 @@ class _RegisterState extends State<Register> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Username',
-                        hintStyle: textRegularGray),
+                        hintStyle: textRegular),
                     controller: _usernameController,
                     autocorrect: false,
                   ),
@@ -111,7 +111,7 @@ class _RegisterState extends State<Register> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email',
-                        hintStyle: textRegularGray),
+                        hintStyle: textRegular),
                     controller: _emailController,
                     autocorrect: false,
                   ),
@@ -126,7 +126,7 @@ class _RegisterState extends State<Register> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Password',
-                        hintStyle: textRegularGray),
+                        hintStyle: textRegular),
                     controller: _passwordController,
                     autocorrect: false,
                   ),

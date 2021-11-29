@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:votie/common/navigation.dart';
+import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         Login.routeName: (context) => const Login(),
         Register.routeName: (context) => const Register(),
         Menu.routeName: (context) => const Menu(),
+        CreateVote.routeName: (context) => const CreateVote(),
         /*
         RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
             restaurant:

@@ -69,7 +69,7 @@ class Profile extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Name',
-                      style: textRegularGray,
+                      style: textRegular,
                     ),
                   ),
                   Container(
@@ -85,7 +85,7 @@ class Profile extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 5.0),
                     child: Text(
                       'Username',
-                      style: textRegularGray,
+                      style: textRegular,
                     ),
                   ),
                   Container(
@@ -101,7 +101,7 @@ class Profile extends StatelessWidget {
                     margin: const EdgeInsets.only(bottom: 5.0),
                     child: Text(
                       'Email',
-                      style: textRegularGray,
+                      style: textRegular,
                     ),
                   ),
                   Container(

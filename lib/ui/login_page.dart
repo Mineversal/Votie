@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
-                          hintStyle: textRegularGray),
+                          hintStyle: textRegular),
                       controller: _emailController,
                       autocorrect: false,
                     ),
@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
-                          hintStyle: textRegularGray),
+                          hintStyle: textRegular),
                       controller: _passwordController,
                       autocorrect: false,
                     ),

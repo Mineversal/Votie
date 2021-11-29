@@ -69,7 +69,7 @@ class Home extends StatelessWidget {
                               margin: const EdgeInsets.only(top: 5.0),
                               child: Text(
                                 'To give your vote',
-                                style: textRegularGray,
+                                style: textRegular,
                               ),
                             ),
                             Container(
@@ -87,7 +87,7 @@ class Home extends StatelessWidget {
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
                                           hintText: 'Ex: 234RGGN',
-                                          hintStyle: textRegularGray),
+                                          hintStyle: textRegular),
                                     ),
                                   ),
                                   ElevatedButton(
@@ -197,7 +197,7 @@ class ListRecentVote extends StatelessWidget {
                             color: getSoftColorByIndex(index),
                             child: Center(
                               child: Text(
-                                title[0],
+                                title[0].toString().toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 25.0,
                                     fontWeight: FontWeight.bold,
@@ -215,12 +215,12 @@ class ListRecentVote extends StatelessWidget {
                                   margin: const EdgeInsets.only(bottom: 5.0),
                                   child: Text(
                                     title,
-                                    style: textMediumBlack,
+                                    style: textMedium,
                                   ),
                                 ),
                                 Text(
                                   'End $updatedDate',
-                                  style: textRegularGray,
+                                  style: textRegular,
                                 ),
                               ],
                             ),

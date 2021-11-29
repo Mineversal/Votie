@@ -47,14 +47,11 @@ Color getSoftColorByIndex(int index) {
   return colorGreen;
 }
 
-TextStyle textRegularGray = GoogleFonts.poppins(
+TextStyle textRegular = GoogleFonts.poppins(
     color: colorGray, fontSize: 14.0, fontWeight: FontWeight.normal);
 
-TextStyle textMediumBlack = GoogleFonts.nunito(
+TextStyle textMedium = GoogleFonts.nunito(
     color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w600);
-
-TextStyle textMediumWhite = GoogleFonts.nunito(
-    color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.normal);
 
 TextStyle textBoldBlack = GoogleFonts.poppins(
     color: Colors.black, fontSize: 16.0, fontWeight: FontWeight.w600);
