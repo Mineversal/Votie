@@ -4,6 +4,7 @@ class PollModel {
   String? title;
   String? description;
   String? images;
+  int? options;
   bool? show;
   DateTime? end;
 
@@ -13,6 +14,7 @@ class PollModel {
       this.title,
       this.description,
       this.images,
+      this.options,
       this.show,
       this.end});
 
@@ -23,6 +25,7 @@ class PollModel {
       title: map['title'],
       description: map['description'],
       images: map['images'],
+      options: map['options'],
       show: map['show'],
       end: map['end'],
     );
@@ -35,6 +38,7 @@ class PollModel {
       'title': title,
       'description': description,
       'images': images,
+      'options': options,
       'show': show ?? true,
       'end': end,
       'users': [],

@@ -131,16 +131,8 @@ class ListYourVote extends StatelessWidget {
                       updatedDate = newFormat.format(dateToCheck);
                     }
 
-                    /*
-                    var id = snapshot.data!.docs[index].get("id");
-                    Future<QuerySnapshot<Map<String, dynamic>>> opsi =
-                        FirebaseFirestore.instance
-                            .collection("polls")
-                            .doc(id)
-                            .collection("options")
-                            .get();
-                    var jumlahOpsi = opsi;
-                    */
+                    var jumlahOpsi = snapshot.data!.docs[index].get("options");
+
                     List voter = snapshot.data!.docs[index].get("users");
                     var jumlahVoter = voter.length;
 
@@ -222,7 +214,7 @@ class ListYourVote extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '4 Option',
+                                      '$jumlahOpsi Option',
                                       style: textRegular,
                                     ),
                                   ],

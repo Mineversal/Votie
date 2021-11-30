@@ -64,13 +64,13 @@ class _CreateVoteState extends State<CreateVote> {
 
     var id = randomAlphaNumeric(6);
 
-    ///polls.doc().id;
     PollModel poll = PollModel(
         id: id,
         creator: widget.userModel.username,
         title: _titleController.text,
         description: _descController.text,
         images: "not-implemented-yet",
+        options: optionId - 1,
         show: true,
         end: _selectedDate);
 
@@ -102,7 +102,7 @@ class _CreateVoteState extends State<CreateVote> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 1.225,
+            height: MediaQuery.of(context).size.height * 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
