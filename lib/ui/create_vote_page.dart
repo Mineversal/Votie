@@ -48,17 +48,47 @@ class _CreateVoteState extends State<CreateVote> {
     }
   }
 
-  addPoll() async {
-    _isLoading = true;
+  validatePoll() {
     List<OptionModel> newOptions = [];
     var optionId = 1;
+    var isDuplicate = false;
     for (var option in options) {
       if (option.title.isNotEmpty) {
-        newOptions.add(OptionModel(
-            title: option.title, images: option.images, id: optionId));
-        optionId++;
+        if (!newOptions.any((element) => element.title == option.title)) {
+          newOptions.add(OptionModel(
+              title: option.title, images: option.images, id: optionId));
+          optionId++;
+        } else {
+          isDuplicate = true;
+        }
       }
     }
+
+    if (_titleController.text.isEmpty ||
+        _descController.text.isEmpty ||
+        _selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill up all field')));
+      return;
+    }
+
+    if (isDuplicate) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Duplicate options exist')));
+      return;
+    }
+
+    if (newOptions.length < 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Poll must have minimum 2 options')));
+      return;
+    }
+
+    addPoll(newOptions, optionId);
+  }
+
+  addPoll(List<OptionModel> options, int optionCount) async {
+    _isLoading = true;
 
     var db = FirebaseFirestore.instance;
     CollectionReference polls = db.collection('polls');
@@ -71,7 +101,7 @@ class _CreateVoteState extends State<CreateVote> {
         title: _titleController.text,
         description: _descController.text,
         images: "not-implemented-yet",
-        options: optionId - 1,
+        options: optionCount - 1,
         show: true,
         end: _selectedDate);
 
@@ -80,18 +110,19 @@ class _CreateVoteState extends State<CreateVote> {
         var optionsCollection = polls.doc(id).collection('options');
         var batch = db.batch();
 
-        for (int i = 0; i < newOptions.length; i++) {
+        for (int i = 0; i < options.length; i++) {
           var ref = optionsCollection.doc('${i + 1}');
-          batch.set(ref, newOptions[i].toMap());
+          batch.set(ref, options[i].toMap());
         }
 
         batch
             .commit()
             .then((value) => Navigation.back())
-            .catchError((error) => print(error));
-      }).catchError((error) => print(error));
+            .catchError((error) => throw Exception(error));
+      }).catchError((error) => throw Exception(error));
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       _isLoading = false;
     }
@@ -293,7 +324,7 @@ class _CreateVoteState extends State<CreateVote> {
                             },
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: '$index. Enter an Option',
+                                hintText: '${index + 1}. Enter an Option',
                                 hintStyle: textMedium.apply(color: colorGray)),
                           ),
                           index != _itemCount - 1
@@ -316,7 +347,7 @@ class _CreateVoteState extends State<CreateVote> {
                       style: ElevatedButton.styleFrom(
                         primary: colorGreen,
                       ),
-                      onPressed: _isLoading ? null : () => {addPoll()},
+                      onPressed: _isLoading ? null : () => {validatePoll()},
                       child: _isLoading
                           ? const SizedBox(
                               height: 25.0,
