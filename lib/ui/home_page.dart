@@ -145,7 +145,9 @@ class ListRecentVote extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("polls")
-            .where("users", arrayContains: userModel.username)
+            .where("creator", isEqualTo: userModel.username)
+
+            ///.where("show", isEqualTo: true)
             .orderBy("end", descending: false)
             .snapshots(),
         builder: (context, snapshot) {
@@ -169,12 +171,12 @@ class ListRecentVote extends StatelessWidget {
                       var id = snapshot.data!.docs[index].get("id");
                       bool show = snapshot.data!.docs[index].get("show");
                       if (show == true) {
-                        var newFormat = DateFormat("yMMMd");
-                        updatedDate = newFormat.format(dateToCheck);
                         FirebaseFirestore.instance
                             .collection("polls")
                             .doc(id)
                             .update({"show": false});
+                        var newFormat = DateFormat("yMMMd");
+                        updatedDate = newFormat.format(dateToCheck);
                       } else {
                         var newFormat = DateFormat("yMMMd");
                         updatedDate = newFormat.format(dateToCheck);
