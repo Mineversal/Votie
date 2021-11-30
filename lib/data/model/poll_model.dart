@@ -37,7 +37,7 @@ class PollModel {
       'images': images,
       'show': show ?? true,
       'end': end,
-      'user': [],
+      'users': [],
     };
   }
 }
