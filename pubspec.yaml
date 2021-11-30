@@ -41,6 +41,7 @@ dependencies:
   flutter_svg: ^0.23.0+1
   google_fonts: ^2.0.0
   flutter_datetime_picker: ^1.5.1
+  random_string: ^2.3.1
 
 dev_dependencies:
   flutter_test:

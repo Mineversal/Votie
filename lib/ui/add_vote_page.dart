@@ -131,6 +131,25 @@ class ListYourVote extends StatelessWidget {
                       updatedDate = newFormat.format(dateToCheck);
                     }
 
+                    /*
+                    var id = snapshot.data!.docs[index].get("id");
+                    Future<QuerySnapshot<Map<String, dynamic>>> opsi =
+                        FirebaseFirestore.instance
+                            .collection("polls")
+                            .doc(id)
+                            .collection("options")
+                            .get();
+                    var jumlahOpsi = opsi;
+                    */
+                    List voter = snapshot.data!.docs[index].get("users");
+                    var jumlahVoter = voter.length;
+
+                    if (jumlahVoter.isNaN) {
+                      jumlahVoter = 0;
+                    } else {
+                      jumlahVoter = jumlahVoter;
+                    }
+
                     var title = snapshot.data!.docs[index].get("title");
 
                     return Container(
@@ -190,7 +209,7 @@ class ListYourVote extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '29 Voter',
+                                      '$jumlahVoter Voter',
                                       style: textRegular,
                                     ),
                                     Container(
@@ -203,7 +222,7 @@ class ListYourVote extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '3 Option',
+                                      '4 Option',
                                       style: textRegular,
                                     ),
                                   ],

@@ -5,6 +5,14 @@ class OptionModel {
 
   OptionModel({this.id, this.images, required this.title});
 
+  factory OptionModel.fromMap(map) {
+    return OptionModel(
+      id: map['id'],
+      title: map['title'],
+      images: map['images'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -16,10 +24,10 @@ class OptionModel {
 
   static List<Map> listToMap({required List<OptionModel> optionModels}) {
     List<Map> options = [];
-    optionModels.forEach((element) {
+    for (var element in optionModels) {
       Map option = element.toMap();
       options.add(option);
-    });
+    }
     return options;
   }
 }

@@ -86,7 +86,7 @@ class Home extends StatelessWidget {
                                     child: TextField(
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
-                                          hintText: 'Ex: 234RGGN',
+                                          hintText: 'Ex: 234RGG',
                                           hintStyle: textRegular),
                                     ),
                                   ),

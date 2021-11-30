@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -8,6 +6,7 @@ import 'package:votie/common/style.dart';
 import 'package:votie/data/model/option_model.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
+import 'package:random_string/random_string.dart';
 
 class CreateVote extends StatefulWidget {
   static const routeName = '/createVote';
@@ -63,7 +62,9 @@ class _CreateVoteState extends State<CreateVote> {
     var db = FirebaseFirestore.instance;
     CollectionReference polls = db.collection('polls');
 
-    var id = polls.doc().id;
+    var id = randomAlphaNumeric(6);
+
+    ///polls.doc().id;
     PollModel poll = PollModel(
         id: id,
         creator: widget.userModel.username,

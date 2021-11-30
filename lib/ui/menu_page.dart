@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/add_vote_page.dart';
 import 'package:votie/ui/home_page.dart';
@@ -22,6 +23,7 @@ class _MenuState extends State<Menu> {
   User? user = FirebaseAuth.instance.currentUser;
 
   UserModel userModel = UserModel();
+  PollModel pollModel = PollModel();
 
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);

@@ -16,6 +16,18 @@ class PollModel {
       this.show,
       this.end});
 
+  factory PollModel.fromMap(map) {
+    return PollModel(
+      id: map['id'],
+      creator: map['creator'],
+      title: map['title'],
+      description: map['description'],
+      images: map['images'],
+      show: map['show'],
+      end: map['end'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
