@@ -7,6 +7,7 @@ import 'package:votie/data/model/option_model.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:random_string/random_string.dart';
+import 'package:votie/utils/date_time_helper.dart';
 
 class CreateVote extends StatefulWidget {
   static const routeName = '/createVote';
@@ -142,6 +143,7 @@ class _CreateVoteState extends State<CreateVote> {
                       TextField(
                         autocorrect: false,
                         controller: _titleController,
+                        style: textMedium,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Title',
@@ -154,6 +156,7 @@ class _CreateVoteState extends State<CreateVote> {
                       TextField(
                         autocorrect: false,
                         controller: _descController,
+                        style: textMedium,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Description',
@@ -171,11 +174,14 @@ class _CreateVoteState extends State<CreateVote> {
                           child: Text(
                             _selectedDate == null
                                 ? 'Ending Date'
-                                : _selectedDate.toString(),
-                            style: textMedium.apply(color: colorGray),
+                                : DateTimeHelper.formatDateTime(
+                                    _selectedDate!, "EE, dd MMM yyy HH':'mm'"),
+                            style: _selectedDate == null
+                                ? textMedium.apply(color: colorGray)
+                                : textMedium,
                           ),
                           onPressed: () {
-                            DatePicker.showDatePicker(context,
+                            DatePicker.showDateTimePicker(context,
                                 showTitleActions: true,
                                 minTime: DateTime.now(), onConfirm: (date) {
                               setState(() {
@@ -211,7 +217,9 @@ class _CreateVoteState extends State<CreateVote> {
                           ),
                           title: Text(
                             'Multivote',
-                            style: textMedium.apply(color: colorGray),
+                            style: _isMultivote
+                                ? textMedium
+                                : textMedium.apply(color: colorGray),
                           ),
                         ),
                       ),
@@ -239,7 +247,9 @@ class _CreateVoteState extends State<CreateVote> {
                           ),
                           title: Text(
                             'Anonymous Vote',
-                            style: textMedium.apply(color: colorGray),
+                            style: _isAnonvote
+                                ? textMedium
+                                : textMedium.apply(color: colorGray),
                           ),
                         ),
                       )
@@ -325,5 +335,12 @@ class _CreateVoteState extends State<CreateVote> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descController.dispose();
+    super.dispose();
   }
 }
