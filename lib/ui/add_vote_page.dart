@@ -116,16 +116,30 @@ class ListYourVote extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 0),
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    Timestamp time =
-                        snapshot.data!.docs[index].get("end"); //from firebase
+                    Timestamp time = snapshot.data!.docs[index].get("end");
                     DateTime dateToCheck = DateTime.fromMicrosecondsSinceEpoch(
                         time.microsecondsSinceEpoch);
                     DateTime aDate = DateTime(
                         dateToCheck.year, dateToCheck.month, dateToCheck.day);
                     String updatedDate;
+
                     if (aDate == today) {
                       var newFormat = DateFormat("Hm");
                       updatedDate = newFormat.format(dateToCheck);
+                    } else if (aDate.isBefore(today)) {
+                      var id = snapshot.data!.docs[index].get("id");
+                      bool show = snapshot.data!.docs[index].get("show");
+                      if (show == true) {
+                        var newFormat = DateFormat("yMMMd");
+                        updatedDate = newFormat.format(dateToCheck);
+                        FirebaseFirestore.instance
+                            .collection("polls")
+                            .doc(id)
+                            .update({"show": false});
+                      } else {
+                        var newFormat = DateFormat("yMMMd");
+                        updatedDate = newFormat.format(dateToCheck);
+                      }
                     } else {
                       var newFormat = DateFormat("yMMMd");
                       updatedDate = newFormat.format(dateToCheck);
