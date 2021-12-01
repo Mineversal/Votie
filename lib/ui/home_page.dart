@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 
@@ -17,6 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  PollModel pollModel = PollModel();
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +141,34 @@ class _HomeState extends State<Home> {
     );
   }
 
-  searchPoll() {}
+  searchPoll() async {
+    if (_searchController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill up voting code field')));
+      return;
+    } else {
+      await firestore
+          .collection('polls')
+          .where("id", isEqualTo: _searchController.text)
+          .get()
+          .then((value) {
+        if (value.size > 0) {
+          firestore.collection("polls").doc(_searchController.text).update({
+            'users': FieldValue.arrayUnion([widget.userModel.username])
+          });
+          const snackbar = SnackBar(
+              content: Text("Voting code has been successfully reedemed"));
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+          _searchController.text = "";
+          return;
+        } else {
+          const snackbar = SnackBar(content: Text("Voting code is not found"));
+          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+          return;
+        }
+      });
+    }
+  }
 }
 
 class ListRecentVote extends StatelessWidget {
@@ -157,10 +186,8 @@ class ListRecentVote extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("polls")
-            .where("creator", isEqualTo: userModel.username)
-
-            ///.where("show", isEqualTo: true)
-            .orderBy("end", descending: false)
+            .where("users", arrayContains: userModel.username)
+            .orderBy("end", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           return snapshot.hasData

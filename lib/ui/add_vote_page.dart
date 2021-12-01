@@ -108,7 +108,7 @@ class ListYourVote extends StatelessWidget {
         stream: FirebaseFirestore.instance
             .collection("polls")
             .where("creator", isEqualTo: userModel.username)
-            .orderBy("end", descending: false)
+            .orderBy("end", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           return snapshot.hasData
