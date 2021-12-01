@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/option_model.dart';
@@ -29,7 +32,8 @@ class _CreateVoteState extends State<CreateVote> {
   final _descController = TextEditingController();
 
   DateTime? _selectedDate;
-  List<OptionModel> options = [];
+  final List<OptionModel> _options = [];
+  final Map<int, XFile?> _optionsImage = {};
 
   Color getColor(Set<MaterialState> states) {
     if (states.contains(MaterialState.selected)) {
@@ -38,13 +42,57 @@ class _CreateVoteState extends State<CreateVote> {
     return colorGray;
   }
 
+  pickImage(int index) async {
+    ImageSource imageSource = ImageSource.gallery;
+    var isRemove = false;
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Image Option'),
+            children: <Widget>[
+              SimpleDialogOption(
+                onPressed: () {
+                  imageSource = ImageSource.gallery;
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Pick a picture from gallery'),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  imageSource = ImageSource.camera;
+                  Navigator.pop(context, true);
+                },
+                child: const Text('Take a picture with camera'),
+              ),
+              _optionsImage[index] != null
+                  ? SimpleDialogOption(
+                      onPressed: () {
+                        isRemove = true;
+                        Navigator.pop(context, true);
+                      },
+                      child: const Text('Remove image'),
+                    )
+                  : Container()
+            ],
+          );
+        });
+
+    if (!isRemove) {
+      _optionsImage[index] = await ImagePicker().pickImage(source: imageSource);
+    } else {
+      _optionsImage.remove(index);
+    }
+    setState(() {});
+  }
+
   saveOption(int index, String text) {
     OptionModel option =
         OptionModel(id: index, images: 'not-implemented-yet', title: text);
-    if (options.length >= index + 1) {
-      options[index] = option;
+    if (_options.length >= index + 1) {
+      _options[index] = option;
     } else {
-      options.insert(index, option);
+      _options.insert(index, option);
     }
   }
 
@@ -52,7 +100,7 @@ class _CreateVoteState extends State<CreateVote> {
     List<OptionModel> newOptions = [];
     var optionId = 1;
     var isDuplicate = false;
-    for (var option in options) {
+    for (var option in _options) {
       if (option.title.isNotEmpty) {
         if (!newOptions.any((element) => element.title == option.title)) {
           newOptions.add(OptionModel(
@@ -312,20 +360,35 @@ class _CreateVoteState extends State<CreateVote> {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          TextField(
-                            autocorrect: false,
-                            onChanged: (text) {
-                              if (index == _itemCount - 1) {
-                                setState(() {
-                                  _itemCount++;
-                                });
-                              }
-                              saveOption(index, text);
-                            },
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: '${index + 1}. Enter an Option',
-                                hintStyle: textMedium.apply(color: colorGray)),
+                          ListTile(
+                            title: TextField(
+                              autocorrect: false,
+                              onChanged: (text) {
+                                if (index == _itemCount - 1) {
+                                  setState(() {
+                                    _itemCount++;
+                                  });
+                                }
+                                saveOption(index, text);
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: '${index + 1}. Enter an Option',
+                                  hintStyle:
+                                      textMedium.apply(color: colorGray)),
+                            ),
+                            trailing: IconButton(
+                              icon: _optionsImage[index] != null
+                                  ? Image.file(
+                                      File(_optionsImage[index]!.path),
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : Image.asset('assets/images/add_image.png'),
+                              onPressed: () {
+                                pickImage(index);
+                              },
+                              iconSize: 35.0,
+                            ),
                           ),
                           index != _itemCount - 1
                               ? const Divider(

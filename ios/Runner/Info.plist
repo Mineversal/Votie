@@ -43,5 +43,9 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>to let user pick image for their options</string>
+		<key>NSCameraUsageDescription</key>
+		<string>to let user take a picture for their options</string>
 	</dict>
 </plist>
