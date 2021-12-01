@@ -5,10 +5,18 @@ import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final UserModel userModel;
 
   const Home({Key? key, required this.userModel}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final _searchController = TextEditingController();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -84,14 +92,16 @@ class Home extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: TextField(
+                                      controller: _searchController,
                                       decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Ex: 234RGG',
-                                          hintStyle: textRegular),
+                                        border: InputBorder.none,
+                                        hintText: 'Ex: 234RGG',
+                                        hintStyle: textRegular,
+                                      ),
                                     ),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () => searchPoll(),
                                     child: const Text('Enter'),
                                     style: ElevatedButton.styleFrom(
                                         primary: colorOrange),
@@ -118,7 +128,7 @@ class Home extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ListRecentVote(
-                    userModel: userModel,
+                    userModel: widget.userModel,
                   ),
                 ),
               ),
@@ -128,6 +138,8 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
+  searchPoll() {}
 }
 
 class ListRecentVote extends StatelessWidget {

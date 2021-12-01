@@ -5,6 +5,8 @@ class PollModel {
   String? description;
   String? images;
   int? options;
+  bool? anonim;
+  bool? multivote;
   bool? show;
   DateTime? end;
 
@@ -15,6 +17,8 @@ class PollModel {
       this.description,
       this.images,
       this.options,
+      this.anonim,
+      this.multivote,
       this.show,
       this.end});
 
@@ -26,6 +30,8 @@ class PollModel {
       description: map['description'],
       images: map['images'],
       options: map['options'],
+      anonim: map['anonim'],
+      multivote: map['multivote'],
       show: map['show'],
       end: map['end'],
     );
@@ -39,6 +45,8 @@ class PollModel {
       'description': description,
       'images': images,
       'options': options,
+      'anonim': anonim,
+      'multivote': multivote,
       'show': show ?? true,
       'end': end,
       'users': [],
