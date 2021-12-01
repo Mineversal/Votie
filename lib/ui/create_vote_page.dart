@@ -11,6 +11,7 @@ import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:random_string/random_string.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class CreateVote extends StatefulWidget {
   static const routeName = '/createVote';
@@ -34,6 +35,8 @@ class _CreateVoteState extends State<CreateVote> {
   DateTime? _selectedDate;
   final List<OptionModel> _options = [];
   final Map<int, XFile?> _optionsImage = {};
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
   Color getColor(Set<MaterialState> states) {
     if (states.contains(MaterialState.selected)) {
@@ -43,27 +46,36 @@ class _CreateVoteState extends State<CreateVote> {
   }
 
   pickImage(int index) async {
-    ImageSource imageSource = ImageSource.gallery;
+    ImageSource? imageSource;
     var isRemove = false;
     await showDialog(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: const Text('Image Option'),
+            title: Text(
+              'Image Option',
+              style: textMedium,
+            ),
             children: <Widget>[
               SimpleDialogOption(
                 onPressed: () {
                   imageSource = ImageSource.gallery;
                   Navigator.pop(context, true);
                 },
-                child: const Text('Pick a picture from gallery'),
+                child: Text(
+                  'Pick a picture from gallery',
+                  style: textRegular.apply(color: Colors.black),
+                ),
               ),
               SimpleDialogOption(
                 onPressed: () {
                   imageSource = ImageSource.camera;
                   Navigator.pop(context, true);
                 },
-                child: const Text('Take a picture with camera'),
+                child: Text(
+                  'Take a picture with camera',
+                  style: textRegular.apply(color: Colors.black),
+                ),
               ),
               _optionsImage[index] != null
                   ? SimpleDialogOption(
@@ -71,7 +83,10 @@ class _CreateVoteState extends State<CreateVote> {
                         isRemove = true;
                         Navigator.pop(context, true);
                       },
-                      child: const Text('Remove image'),
+                      child: Text(
+                        'Remove image',
+                        style: textRegular.apply(color: Colors.black),
+                      ),
                     )
                   : Container()
             ],
@@ -79,16 +94,32 @@ class _CreateVoteState extends State<CreateVote> {
         });
 
     if (!isRemove) {
-      _optionsImage[index] = await ImagePicker().pickImage(source: imageSource);
+      if (imageSource != null) {
+        _optionsImage[index] =
+            await ImagePicker().pickImage(source: imageSource!);
+      }
     } else {
       _optionsImage.remove(index);
     }
     setState(() {});
   }
 
+  Future<String?> uploadImage(File file, String fileName) async {
+    try {
+      await storage.ref(fileName).putFile(file);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    return storage.ref(fileName).getDownloadURL();
+  }
+
   saveOption(int index, String text) {
-    OptionModel option =
-        OptionModel(id: index, images: 'not-implemented-yet', title: text);
+    OptionModel option = OptionModel(id: index, images: '', title: text);
     if (_options.length >= index + 1) {
       _options[index] = option;
     } else {
@@ -98,6 +129,7 @@ class _CreateVoteState extends State<CreateVote> {
 
   validatePoll() {
     List<OptionModel> newOptions = [];
+    final Map<int, XFile?> newOptionsImage = {};
     var optionId = 1;
     var isDuplicate = false;
     for (var option in _options) {
@@ -105,6 +137,7 @@ class _CreateVoteState extends State<CreateVote> {
         if (!newOptions.any((element) => element.title == option.title)) {
           newOptions.add(OptionModel(
               title: option.title, images: option.images, id: optionId));
+          newOptionsImage[optionId] = _optionsImage[option.id];
           optionId++;
         } else {
           isDuplicate = true;
@@ -132,16 +165,35 @@ class _CreateVoteState extends State<CreateVote> {
       return;
     }
 
-    addPoll(newOptions, optionId);
+    addPoll(newOptions, newOptionsImage, optionId);
   }
 
-  addPoll(List<OptionModel> options, int optionCount) async {
-    _isLoading = true;
+  addPoll(List<OptionModel> options, Map<int, XFile?> optionsImage,
+      int optionCount) async {
+    setState(() {
+      _isLoading = true;
+    });
 
     var db = FirebaseFirestore.instance;
     CollectionReference polls = db.collection('polls');
 
     var id = randomAlphaNumeric(6);
+
+    for (int i = 0; i < options.length; i++) {
+      var option = options[i];
+      if (optionsImage[option.id] != null) {
+        var image = File(optionsImage[option.id]!.path);
+        String basename = image.path.split('/').last;
+        var fileName = 'images/polls/$id/$i-$basename';
+        var imageUrl = await uploadImage(image, fileName);
+
+        if (imageUrl != null) {
+          option.images = imageUrl;
+        } else {
+          return;
+        }
+      }
+    }
 
     PollModel poll = PollModel(
         id: id,
@@ -172,7 +224,9 @@ class _CreateVoteState extends State<CreateVote> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
