@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:votie/common/style.dart';
-import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +17,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _searchController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  PollModel pollModel = PollModel();
 
   @override
   Widget build(BuildContext context) {
