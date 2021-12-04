@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
+import 'package:votie/ui/detail_vote_page.dart';
 
 class Home extends StatefulWidget {
   final UserModel userModel;
@@ -242,43 +245,70 @@ class ListRecentVote extends StatelessWidget {
                         ],
                       ),
                       width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 60.0,
-                            height: 60.0,
-                            color: getSoftColorByIndex(index),
-                            child: Center(
-                              child: Text(
-                                title[0].toString().toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: getColorByIndex(index)),
+                      child: InkWell(
+                        onTap: () {
+                          PollModel pollModel = PollModel();
+                          pollModel.id = snapshot.data!.docs[index].get("id");
+                          pollModel.creator =
+                              snapshot.data!.docs[index].get("creator");
+                          pollModel.title =
+                              snapshot.data!.docs[index].get("title");
+                          pollModel.description =
+                              snapshot.data!.docs[index].get("description");
+                          pollModel.images =
+                              snapshot.data!.docs[index].get("images");
+                          pollModel.options =
+                              snapshot.data!.docs[index].get("options");
+                          pollModel.anonim =
+                              snapshot.data!.docs[index].get("anonim");
+                          pollModel.multivote =
+                              snapshot.data!.docs[index].get("multivote");
+                          pollModel.show =
+                              snapshot.data!.docs[index].get("show");
+
+                          ///pollModel.end = snapshot.data!.docs[index].get("end");
+
+                          Navigation.intentWithData(
+                              DetailVote.routeName, pollModel);
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60.0,
+                              height: 60.0,
+                              color: getSoftColorByIndex(index),
+                              child: Center(
+                                child: Text(
+                                  title[0].toString().toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: getColorByIndex(index)),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    title,
-                                    style: textMedium,
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(bottom: 5.0),
+                                    child: Text(
+                                      title,
+                                      style: textMedium,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'End $updatedDate',
-                                  style: textRegular,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                  Text(
+                                    'End $updatedDate',
+                                    style: textRegular,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   },

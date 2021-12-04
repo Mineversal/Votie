@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:votie/common/navigation.dart';
+import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/create_vote_page.dart';
+import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
@@ -34,11 +36,8 @@ class MyApp extends StatelessWidget {
               userModel:
                   ModalRoute.of(context)?.settings.arguments as UserModel,
             ),
-        /*
-        RestaurantDetailPage.routeName: (context) => RestaurantDetailPage(
-            restaurant:
-                ModalRoute.of(context)?.settings.arguments as Restaurant),
-        */
+        DetailVote.routeName: (context) => DetailVote(
+            pollModel: ModalRoute.of(context)?.settings.arguments as PollModel),
       },
     );
   }

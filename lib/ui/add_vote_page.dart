@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:votie/ui/create_vote_page.dart';
+import 'package:votie/ui/detail_vote_page.dart';
 
 class AddVote extends StatelessWidget {
   final UserModel userModel;
@@ -175,78 +177,106 @@ class ListYourVote extends StatelessWidget {
                         ],
                       ),
                       width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 66.0,
-                            height: 66.0,
-                            color: getSoftColorByIndex(index),
-                            child: Center(
-                              child: Text(
-                                title[0].toString().toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: getColorByIndex(index)),
+                      child: InkWell(
+                        onTap: () {
+                          PollModel pollModel = PollModel();
+                          pollModel.id = snapshot.data!.docs[index].get("id");
+                          pollModel.creator =
+                              snapshot.data!.docs[index].get("creator");
+                          pollModel.title =
+                              snapshot.data!.docs[index].get("title");
+                          pollModel.description =
+                              snapshot.data!.docs[index].get("description");
+                          pollModel.images =
+                              snapshot.data!.docs[index].get("images");
+                          pollModel.options =
+                              snapshot.data!.docs[index].get("options");
+                          pollModel.anonim =
+                              snapshot.data!.docs[index].get("anonim");
+                          pollModel.multivote =
+                              snapshot.data!.docs[index].get("multivote");
+                          pollModel.show =
+                              snapshot.data!.docs[index].get("show");
+
+                          ///pollModel.end = snapshot.data!.docs[index].get("end");
+
+                          Navigation.intentWithData(
+                              DetailVote.routeName, pollModel);
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 66.0,
+                              height: 66.0,
+                              color: getSoftColorByIndex(index),
+                              child: Center(
+                                child: Text(
+                                  title[0].toString().toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: getColorByIndex(index)),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    title,
-                                    style: textMedium,
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(bottom: 5.0),
+                                    child: Text(
+                                      title,
+                                      style: textMedium,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 5.0),
-                                      child: const Icon(
-                                        Icons.person,
-                                        color: colorGray,
-                                        size: 18,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 5.0),
+                                        child: const Icon(
+                                          Icons.person,
+                                          color: colorGray,
+                                          size: 18,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      '$jumlahVoter Voter',
-                                      style: textRegular,
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          right: 5.0, left: 15.0),
-                                      child: const Icon(
-                                        Icons.style,
-                                        color: colorGray,
-                                        size: 18,
+                                      Text(
+                                        '$jumlahVoter Voter',
+                                        style: textRegular,
                                       ),
-                                    ),
-                                    Text(
-                                      '$jumlahOpsi Option',
-                                      style: textRegular,
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    'End $updatedDate',
-                                    style: GoogleFonts.poppins(
-                                        color: getColorByIndex(index),
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.normal),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 5.0, left: 15.0),
+                                        child: const Icon(
+                                          Icons.style,
+                                          color: colorGray,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        '$jumlahOpsi Option',
+                                        style: textRegular,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      'End $updatedDate',
+                                      style: GoogleFonts.poppins(
+                                          color: getColorByIndex(index),
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     );
                   },
