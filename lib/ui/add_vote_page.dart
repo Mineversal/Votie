@@ -8,7 +8,7 @@ import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:votie/ui/create_vote_page.dart';
-import 'package:votie/ui/detail_vote_page.dart';
+import 'package:votie/ui/result_vote_page.dart';
 
 class AddVote extends StatelessWidget {
   final UserModel userModel;
@@ -198,21 +198,22 @@ class ListYourVote extends StatelessWidget {
                           pollModel.end = aDate;
 
                           Navigation.intentWithData(
-                              DetailVote.routeName, pollModel);
+                              ResultVote.routeName, pollModel);
                         },
                         child: Row(
                           children: [
                             Container(
                               width: 66.0,
                               height: 66.0,
-                              color: getSoftColorByIndex(index),
+                              color: getSoftColorByIndex(title.codeUnitAt(0)),
                               child: Center(
                                 child: Text(
                                   title[0].toString().toUpperCase(),
                                   style: TextStyle(
                                       fontSize: 25.0,
                                       fontWeight: FontWeight.bold,
-                                      color: getColorByIndex(index)),
+                                      color:
+                                          getColorByIndex(title.codeUnitAt(0))),
                                 ),
                               ),
                             ),
@@ -264,7 +265,8 @@ class ListYourVote extends StatelessWidget {
                                     child: Text(
                                       'End $updatedDate',
                                       style: GoogleFonts.poppins(
-                                          color: getColorByIndex(index),
+                                          color: getColorByIndex(
+                                              title.codeUnitAt(0)),
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.normal),
                                     ),

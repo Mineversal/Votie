@@ -9,6 +9,7 @@ import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/ui/login_page.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
+import 'package:votie/ui/result_vote_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
                   ModalRoute.of(context)?.settings.arguments as UserModel,
             ),
         DetailVote.routeName: (context) => DetailVote(
+            pollModel: ModalRoute.of(context)?.settings.arguments as PollModel),
+        ResultVote.routeName: (context) => ResultVote(
             pollModel: ModalRoute.of(context)?.settings.arguments as PollModel),
       },
     );

@@ -108,7 +108,8 @@ class _CreateVoteState extends State<CreateVote> {
     try {
       await storage.ref(fileName).putFile(file);
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
       return null;
     } finally {
       setState(() {

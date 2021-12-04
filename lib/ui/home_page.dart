@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Container(
-                              color: colorSoftGray,
+                              color: const Color(0xFFFAFAFA),
                               margin: const EdgeInsets.only(top: 20.0),
                               padding: const EdgeInsets.only(
                                   left: 20.0,
