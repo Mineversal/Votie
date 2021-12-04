@@ -27,8 +27,7 @@ class _DetailVoteState extends State<DetailVote> {
                 Text(widget.pollModel.description.toString()),
                 Text(widget.pollModel.id.toString()),
                 Text(widget.pollModel.creator.toString()),
-
-                ///Text(widget.pollModel.end.toString()),
+                Text(widget.pollModel.end.toString()),
                 Container(
                   margin: const EdgeInsets.all(20.0),
                   alignment: Alignment.centerLeft,

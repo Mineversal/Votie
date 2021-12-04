@@ -183,22 +183,19 @@ class ListYourVote extends StatelessWidget {
                           pollModel.id = snapshot.data!.docs[index].get("id");
                           pollModel.creator =
                               snapshot.data!.docs[index].get("creator");
-                          pollModel.title =
-                              snapshot.data!.docs[index].get("title");
+                          pollModel.title = title;
                           pollModel.description =
                               snapshot.data!.docs[index].get("description");
                           pollModel.images =
                               snapshot.data!.docs[index].get("images");
-                          pollModel.options =
-                              snapshot.data!.docs[index].get("options");
+                          pollModel.options = jumlahOpsi;
                           pollModel.anonim =
                               snapshot.data!.docs[index].get("anonim");
                           pollModel.multivote =
                               snapshot.data!.docs[index].get("multivote");
                           pollModel.show =
                               snapshot.data!.docs[index].get("show");
-
-                          ///pollModel.end = snapshot.data!.docs[index].get("end");
+                          pollModel.end = aDate;
 
                           Navigation.intentWithData(
                               DetailVote.routeName, pollModel);
