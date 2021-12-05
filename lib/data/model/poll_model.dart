@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:votie/utils/date_time_helper.dart';
+
 class PollModel {
   String? id;
   String? creator;
@@ -9,6 +12,7 @@ class PollModel {
   bool? multivote;
   bool? show;
   DateTime? end;
+  List<dynamic>? users;
 
   PollModel(
       {this.id,
@@ -20,7 +24,8 @@ class PollModel {
       this.anonim,
       this.multivote,
       this.show,
-      this.end});
+      this.end,
+      this.users});
 
   factory PollModel.fromMap(map) {
     return PollModel(
@@ -34,6 +39,23 @@ class PollModel {
       multivote: map['multivote'],
       show: map['show'],
       end: map['end'],
+      users: map['users'],
+    );
+  }
+
+  factory PollModel.fromDoc(doc) {
+    return PollModel(
+      id: doc.get('id'),
+      creator: doc.get('creator'),
+      title: doc.get('title'),
+      description: doc.get('description'),
+      images: doc.get('images'),
+      options: doc.get('options'),
+      anonim: doc.get('anonim'),
+      multivote: doc.get('multivote'),
+      show: doc.get('show'),
+      end: DateTimeHelper.timeStampToDateTime(doc.get('end')),
+      users: doc.get('users'),
     );
   }
 
@@ -49,7 +71,7 @@ class PollModel {
       'multivote': multivote,
       'show': show ?? true,
       'end': end,
-      'users': [],
+      'users': users ?? [],
     };
   }
 }

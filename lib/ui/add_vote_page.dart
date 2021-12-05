@@ -196,6 +196,8 @@ class ListYourVote extends StatelessWidget {
                           pollModel.show =
                               snapshot.data!.docs[index].get("show");
                           pollModel.end = aDate;
+                          pollModel.users =
+                              snapshot.data!.docs[index].get("users");
 
                           Navigation.intentWithData(
                               ResultVote.routeName, pollModel);

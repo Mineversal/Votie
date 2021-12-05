@@ -2,14 +2,25 @@ class OptionModel {
   int? id;
   String? images;
   String title;
+  List<dynamic>? voter;
 
-  OptionModel({this.id, this.images, required this.title});
+  OptionModel({this.id, this.images, required this.title, this.voter});
 
   factory OptionModel.fromMap(map) {
     return OptionModel(
       id: map['id'],
       title: map['title'],
       images: map['images'],
+      voter: map['voter'],
+    );
+  }
+
+  factory OptionModel.fromDoc(doc) {
+    return OptionModel(
+      id: doc.get('id'),
+      title: doc.get('title'),
+      images: doc.get('images'),
+      voter: doc.get('voter'),
     );
   }
 
@@ -18,7 +29,7 @@ class OptionModel {
       'id': id,
       'images': images,
       'title': title,
-      'voter': [],
+      'voter': voter ?? [],
     };
   }
 
