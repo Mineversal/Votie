@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:votie/utils/date_time_helper.dart';
 
 class PollModel {

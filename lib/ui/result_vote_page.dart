@@ -265,7 +265,7 @@ class CountDownTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var endDate = poll.end!;
+    var endDate = poll.end ?? DateTime.now();
     var dateNow = DateTime.now();
     var difference = endDate.difference(dateNow).inMilliseconds;
     _stopWatchTimer.setPresetTime(mSec: difference);
@@ -273,7 +273,7 @@ class CountDownTimer extends StatelessWidget {
     return StreamBuilder<int>(
       stream: _stopWatchTimer.rawTime,
       builder: (context, snapshot) {
-        final value = snapshot.data;
+        final value = snapshot.data ?? 0;
         return Container(
           margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
           alignment: Alignment.center,
@@ -294,11 +294,11 @@ class CountDownTimer extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'End on ${DateTimeHelper.formatDateTime(poll.end!, "dd MMM yyy, HH':'mm'")}',
+                        'End on ${DateTimeHelper.formatDateTime(endDate, "dd MMM yyy, HH':'mm'")}',
                         style: textRegular.apply(color: colorDarkBlue),
                       ),
                       Text(
-                        '${(StopWatchTimer.getRawHours(value!) / 24).floor()} : ${StopWatchTimer.getRawHours(value) % 24} : ${StopWatchTimer.getRawMinute(value) % 60} : ${StopWatchTimer.getDisplayTimeSecond(value)} ',
+                        '${(StopWatchTimer.getRawHours(value) / 24).floor()} : ${StopWatchTimer.getRawHours(value) % 24} : ${StopWatchTimer.getRawMinute(value) % 60} : ${StopWatchTimer.getDisplayTimeSecond(value)} ',
                         style: GoogleFonts.poppins(
                             fontSize: 35.0,
                             fontWeight: FontWeight.w600,
