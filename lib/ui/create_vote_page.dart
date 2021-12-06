@@ -197,16 +197,18 @@ class _CreateVoteState extends State<CreateVote> {
     }
 
     PollModel poll = PollModel(
-        id: id,
-        creator: widget.userModel.username,
-        title: _titleController.text,
-        description: _descController.text,
-        anonim: _isAnonvote,
-        multivote: _isMultivote,
-        images: "not-implemented-yet",
-        options: optionCount - 1,
-        show: true,
-        end: _selectedDate);
+      id: id,
+      creator: widget.userModel.username,
+      title: _titleController.text,
+      description: _descController.text,
+      anonim: _isAnonvote,
+      multivote: _isMultivote,
+      images: "not-implemented-yet",
+      options: optionCount - 1,
+      show: true,
+      end: _selectedDate,
+      users: [widget.userModel.username],
+    );
 
     try {
       await polls.doc(id).set(poll.toMap()).then((value) {

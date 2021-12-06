@@ -247,24 +247,21 @@ class ListRecentVote extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: InkWell(
                         onTap: () {
-                          PollModel pollModel = PollModel();
-                          pollModel.id = snapshot.data!.docs[index].get("id");
-                          pollModel.creator =
-                              snapshot.data!.docs[index].get("creator");
-                          pollModel.title = title;
-                          pollModel.description =
-                              snapshot.data!.docs[index].get("description");
-                          pollModel.images =
-                              snapshot.data!.docs[index].get("images");
-                          pollModel.options =
-                              snapshot.data!.docs[index].get("options");
-                          pollModel.anonim =
-                              snapshot.data!.docs[index].get("anonim");
-                          pollModel.multivote =
-                              snapshot.data!.docs[index].get("multivote");
-                          pollModel.show =
-                              snapshot.data!.docs[index].get("show");
-                          pollModel.end = aDate;
+                          PollModel pollModel = PollModel(
+                            id: snapshot.data!.docs[index].get("id"),
+                            creator: snapshot.data!.docs[index].get("creator"),
+                            title: title,
+                            description:
+                                snapshot.data!.docs[index].get("description"),
+                            images: snapshot.data!.docs[index].get("images"),
+                            options: snapshot.data!.docs[index].get("options"),
+                            anonim: snapshot.data!.docs[index].get("anonim"),
+                            multivote:
+                                snapshot.data!.docs[index].get("multivote"),
+                            show: snapshot.data!.docs[index].get("show"),
+                            end: aDate,
+                            users: snapshot.data!.docs[index].get("users"),
+                          );
 
                           Navigation.intentWithData(
                               DetailVote.routeName, pollModel);
