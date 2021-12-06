@@ -162,7 +162,6 @@ class ListYourVote extends StatelessWidget {
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 15.0),
-                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5.0),
@@ -177,8 +176,8 @@ class ListYourVote extends StatelessWidget {
                         ],
                       ),
                       width: MediaQuery.of(context).size.width,
-                      child: InkWell(
-                        onTap: () {
+                      child: TextButton(
+                        onPressed: () {
                           PollModel pollModel = PollModel(
                             id: snapshot.data!.docs[index].get("id"),
                             creator: snapshot.data!.docs[index].get("creator"),
@@ -198,81 +197,85 @@ class ListYourVote extends StatelessWidget {
                           Navigation.intentWithData(
                               ResultVote.routeName, pollModel);
                         },
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 66.0,
-                              height: 66.0,
-                              color: getSoftColorByIndex(title.codeUnitAt(0)),
-                              child: Center(
-                                child: Text(
-                                  title[0].toString().toUpperCase(),
-                                  style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                          getColorByIndex(title.codeUnitAt(0))),
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 66.0,
+                                height: 66.0,
+                                color: getSoftColorByIndex(title.codeUnitAt(0)),
+                                child: Center(
+                                  child: Text(
+                                    title[0].toString().toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: getColorByIndex(
+                                            title.codeUnitAt(0))),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 5.0),
-                                    child: Text(
-                                      title,
-                                      style: textMedium,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin:
+                                          const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        title,
+                                        style: textMedium,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        margin:
-                                            const EdgeInsets.only(right: 5.0),
-                                        child: const Icon(
-                                          Icons.person,
-                                          color: colorGray,
-                                          size: 18,
+                                    Row(
+                                      children: [
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 5.0),
+                                          child: const Icon(
+                                            Icons.person,
+                                            color: colorGray,
+                                            size: 18,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        '$jumlahVoter Voter',
-                                        style: textRegular,
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            right: 5.0, left: 15.0),
-                                        child: const Icon(
-                                          Icons.style,
-                                          color: colorGray,
-                                          size: 18,
+                                        Text(
+                                          '$jumlahVoter Voter',
+                                          style: textRegular,
                                         ),
-                                      ),
-                                      Text(
-                                        '$jumlahOpsi Option',
-                                        style: textRegular,
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 5.0),
-                                    child: Text(
-                                      'End $updatedDate',
-                                      style: GoogleFonts.poppins(
-                                          color: getColorByIndex(
-                                              title.codeUnitAt(0)),
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.normal),
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              right: 5.0, left: 15.0),
+                                          child: const Icon(
+                                            Icons.style,
+                                            color: colorGray,
+                                            size: 18,
+                                          ),
+                                        ),
+                                        Text(
+                                          '$jumlahOpsi Option',
+                                          style: textRegular,
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 5.0),
+                                      child: Text(
+                                        'End $updatedDate',
+                                        style: GoogleFonts.poppins(
+                                            color: getColorByIndex(
+                                                title.codeUnitAt(0)),
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );

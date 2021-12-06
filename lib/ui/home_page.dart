@@ -230,7 +230,6 @@ class ListRecentVote extends StatelessWidget {
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 15.0),
-                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5.0),
@@ -245,8 +244,8 @@ class ListRecentVote extends StatelessWidget {
                         ],
                       ),
                       width: MediaQuery.of(context).size.width,
-                      child: InkWell(
-                        onTap: () {
+                      child: TextButton(
+                        onPressed: () {
                           PollModel pollModel = PollModel(
                             id: snapshot.data!.docs[index].get("id"),
                             creator: snapshot.data!.docs[index].get("creator"),
@@ -266,43 +265,47 @@ class ListRecentVote extends StatelessWidget {
                           Navigation.intentWithData(
                               DetailVote.routeName, pollModel);
                         },
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 60.0,
-                              height: 60.0,
-                              color: getSoftColorByIndex(index),
-                              child: Center(
-                                child: Text(
-                                  title[0].toString().toUpperCase(),
-                                  style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: getColorByIndex(index)),
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 60.0,
+                                height: 60.0,
+                                color: getSoftColorByIndex(index),
+                                child: Center(
+                                  child: Text(
+                                    title[0].toString().toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 25.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: getColorByIndex(index)),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 5.0),
-                                    child: Text(
-                                      title,
-                                      style: textMedium,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin:
+                                          const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        title,
+                                        style: textMedium,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'End $updatedDate',
-                                    style: textRegular,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+                                    Text(
+                                      'End $updatedDate',
+                                      style: textRegular,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
