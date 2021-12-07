@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/option_model.dart';
 import 'package:votie/data/model/poll_model.dart';
 
 class DetailVote extends StatefulWidget {
@@ -17,41 +21,122 @@ class _DetailVoteState extends State<DetailVote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 1.125,
-          child: Center(
-            child: Column(
-              children: [
-                Text(widget.pollModel.title.toString()),
-                Text(widget.pollModel.description.toString()),
-                Text(widget.pollModel.id.toString()),
-                Text(widget.pollModel.creator.toString()),
-                Text(widget.pollModel.end.toString()),
-                Container(
-                  margin: const EdgeInsets.all(20.0),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pilih Sekarang',
-                    style: titleMediumBlack,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      onPressed: () => (Navigation.back()),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: ListOptions(pollModel: widget.pollModel),
+                  Container(
+                    margin: const EdgeInsets.only(
+                        left: 20.0, right: 20.0, top: 10.0),
+                    child: Text(
+                      widget.pollModel.title ?? '',
+                      style: textSemiBold,
+                    ),
                   ),
-                ),
-              ],
+                  widget.pollModel.description != null
+                      ? Container(
+                          margin: const EdgeInsets.only(
+                              left: 20.0, right: 20.0, top: 18.0),
+                          child: Text(
+                            widget.pollModel.description!,
+                            style: textRegular,
+                          ),
+                        )
+                      : Container(),
+                  Container(
+                    margin: const EdgeInsets.only(
+                        left: 20.0, right: 25.0, top: 28.0, bottom: 28.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 14.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: colorSoftGray,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                color: colorGray,
+                              ),
+                            ),
+                            Text(
+                              widget.pollModel.creator ?? '',
+                              style: textRegular.apply(color: Colors.black),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 14.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: colorSoftGray,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Icon(
+                                Icons.tag,
+                                color: colorGray,
+                              ),
+                            ),
+                            Text(
+                              widget.pollModel.id.toString(),
+                              style: textRegular.apply(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
+            ListOptions(pollModel: widget.pollModel),
+          ],
+        ),
+      ),
+      bottomNavigationBar: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            primary: getColorByIndex(widget.pollModel.title!.codeUnitAt(0))),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'VOTE NOW',
+                style: textMedium.apply(color: Colors.white),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20.0),
+                child: Icon(Icons.how_to_vote),
+              )
+            ],
           ),
         ),
+        onPressed: () {},
       ),
     );
   }
 }
 
-class ListOptions extends StatelessWidget {
+class ListOptions extends StatefulWidget {
   final PollModel pollModel;
 
   const ListOptions({
@@ -60,85 +145,100 @@ class ListOptions extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ListOptions> createState() => _ListOptionsState();
+}
+
+class _ListOptionsState extends State<ListOptions> {
+  final List<bool> _isOptionSelected = [];
+
+  Color getColor(Set<MaterialState> states) {
+    if (states.contains(MaterialState.selected)) {
+      return getColorByIndex(widget.pollModel.title!.codeUnitAt(0));
+    }
+    return colorGray;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("polls")
-            .doc(pollModel.id)
+            .doc(widget.pollModel.id)
             .collection("options")
             .snapshots(),
         builder: (context, snapshot) {
-          return snapshot.hasData
-              ? ListView.builder(
-                  padding: const EdgeInsets.only(top: 0),
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    ///var id = snapshot.data!.docs[index].get("id");
-                    var title = snapshot.data!.docs[index].get("title");
-                    List voter = snapshot.data!.docs[index].get("voter");
-                    var jumlahVoter = voter.length;
-
-                    if (jumlahVoter.isNaN) {
-                      jumlahVoter = 0;
-                    } else {
-                      jumlahVoter = jumlahVoter;
-                    }
-
-                    return InkWell(
-                      onTap: () {},
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 15.0),
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.06),
-                              spreadRadius: 5,
-                              blurRadius: 20,
-                              offset: const Offset(
-                                  2, 2), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 66.0,
-                              height: 66.0,
-                              color: getSoftColorByIndex(index),
-                              child: Center(
-                                child: Text(
-                                  title[0].toString().toUpperCase(),
-                                  style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: getColorByIndex(index)),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Center(
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    title,
-                                    style: textMedium,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
+          if (snapshot.hasData) {
+            var docs = snapshot.data!.docs;
+            var options = docs.map((doc) => OptionModel.fromDoc(doc)).toList();
+            return SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                var option = options[index];
+                if (_isOptionSelected.length < index + 1) {
+                  _isOptionSelected.insert(index, false);
+                }
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (!widget.pollModel.multivote!) {
+                        for (int i = 0; i < _isOptionSelected.length; i++) {
+                          _isOptionSelected[i] = false;
+                        }
+                      }
+                      _isOptionSelected[index] = !_isOptionSelected[index];
+                    });
                   },
-                )
-              : const Center(child: Text("Opsi Tidak Ada"));
+                  splashFactory: NoSplash.splashFactory,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    margin: const EdgeInsets.only(
+                        left: 20.0, right: 20.0, top: 15.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(
+                          color: _isOptionSelected[index]
+                              ? getColorByIndex(
+                                  widget.pollModel.title!.codeUnitAt(0))
+                              : const Color(0xFFECECEC),
+                          width: 2.0,
+                          style: BorderStyle.solid),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(0),
+                      leading: Checkbox(
+                        fillColor: MaterialStateProperty.resolveWith(getColor),
+                        activeColor: Colors.transparent,
+                        value: _isOptionSelected[index],
+                        shape: const CircleBorder(),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isOptionSelected[index] = value!;
+                          });
+                        },
+                      ),
+                      title: Text(
+                        option.title,
+                        style: _isOptionSelected[index]
+                            ? textMedium.apply(
+                                color: getColorByIndex(
+                                    widget.pollModel.title!.codeUnitAt(0)))
+                            : textMedium,
+                      ),
+                    ),
+                  ),
+                );
+              }, childCount: options.length),
+            );
+          } else {
+            return SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const Center(
+                    child: Text("Opsi Tidak Ada"),
+                  ),
+                ],
+              ),
+            );
+          }
         });
   }
 }

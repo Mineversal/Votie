@@ -28,9 +28,9 @@ Color getColorByIndex(int index) {
     case 2:
       return colorBlue;
     case 3:
-      return colorDarkOrange;
+      return colorOrange;
   }
-  return colorOrange;
+  return colorRed;
 }
 
 Color getSoftColorByIndex(int index) {
