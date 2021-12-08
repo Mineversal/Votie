@@ -150,11 +150,14 @@ class _HomeState extends State<Home> {
     } else {
       await firestore
           .collection('polls')
-          .where("id", isEqualTo: _searchController.text)
+          .where("id", isEqualTo: _searchController.text.toUpperCase())
           .get()
           .then((value) {
         if (value.size > 0) {
-          firestore.collection("polls").doc(_searchController.text).update({
+          firestore
+              .collection("polls")
+              .doc(_searchController.text.toUpperCase())
+              .update({
             'users': FieldValue.arrayUnion([widget.userModel.username])
           });
           const snackbar = SnackBar(
