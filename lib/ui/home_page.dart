@@ -272,14 +272,17 @@ class ListRecentVote extends StatelessWidget {
                               Container(
                                 width: 60.0,
                                 height: 60.0,
-                                color: getSoftColorByIndex(index),
+                                color: getSoftColorByIndex(title.codeUnitAt(0)),
                                 child: Center(
                                   child: Text(
                                     title[0].toString().toUpperCase(),
                                     style: TextStyle(
-                                        fontSize: 25.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: getColorByIndex(index)),
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: getColorByIndex(
+                                        title.codeUnitAt(0),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

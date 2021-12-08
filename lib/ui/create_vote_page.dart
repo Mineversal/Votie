@@ -178,7 +178,7 @@ class _CreateVoteState extends State<CreateVote> {
     var db = FirebaseFirestore.instance;
     CollectionReference polls = db.collection('polls');
 
-    var id = randomAlphaNumeric(6);
+    var id = randomAlphaNumeric(6).toUpperCase();
 
     for (int i = 0; i < options.length; i++) {
       var option = options[i];
@@ -208,6 +208,7 @@ class _CreateVoteState extends State<CreateVote> {
       show: true,
       end: _selectedDate,
       users: [widget.userModel.username],
+      voters: [],
     );
 
     try {

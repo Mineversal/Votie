@@ -12,6 +12,7 @@ class PollModel {
   bool? show;
   DateTime? end;
   List<dynamic>? users;
+  List<dynamic>? voters;
 
   PollModel(
       {this.id,
@@ -24,7 +25,8 @@ class PollModel {
       this.multivote,
       this.show,
       this.end,
-      this.users});
+      this.users,
+      this.voters});
 
   factory PollModel.fromMap(map) {
     return PollModel(
@@ -39,6 +41,7 @@ class PollModel {
       show: map['show'],
       end: map['end'],
       users: map['users'],
+      voters: map['voters'],
     );
   }
 
@@ -55,6 +58,7 @@ class PollModel {
       show: doc.get('show'),
       end: DateTimeHelper.timeStampToDateTime(doc.get('end')),
       users: doc.get('users'),
+      voters: doc.get('voters'),
     );
   }
 
@@ -71,6 +75,7 @@ class PollModel {
       'show': show ?? true,
       'end': end,
       'users': users ?? [],
+      'voters': voters ?? [],
     };
   }
 }

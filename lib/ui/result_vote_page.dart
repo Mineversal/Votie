@@ -146,7 +146,7 @@ class ResultVote extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '${poll.users != null ? poll.users!.length : '0'} Votes',
+                                '${poll.voters != null ? poll.voters!.length : '0'} Voter',
                                 style: textRegular.apply(color: Colors.black),
                               )
                             ],
@@ -235,9 +235,9 @@ class ListOptions extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: pollModel.users!.isEmpty
+                      width: pollModel.voters!.isEmpty
                           ? 55.0
-                          : ((option.voter!.length / pollModel.users!.length) *
+                          : ((option.voter!.length / pollModel.voters!.length) *
                                   (_width - 55)) +
                               55,
                       height: 55,

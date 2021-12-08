@@ -149,7 +149,7 @@ class ListYourVote extends StatelessWidget {
 
                     var jumlahOpsi = snapshot.data!.docs[index].get("options");
 
-                    List voter = snapshot.data!.docs[index].get("users");
+                    List voter = snapshot.data!.docs[index].get("voters");
                     var jumlahVoter = voter.length;
 
                     if (jumlahVoter.isNaN) {
