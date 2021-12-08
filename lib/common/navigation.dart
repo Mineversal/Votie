@@ -11,6 +11,11 @@ class Navigation {
     navigatorKey.currentState?.pushNamed(routeName, arguments: arguments);
   }
 
+  static intentWithMultipleData(
+      String routeName, Map<String, Object> arguments) {
+    navigatorKey.currentState?.pushNamed(routeName, arguments: arguments);
+  }
+
   static intentAndReplace(String routeName) {
     navigatorKey.currentState?.pushReplacementNamed(routeName);
   }

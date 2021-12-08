@@ -249,24 +249,13 @@ class ListRecentVote extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: TextButton(
                         onPressed: () {
-                          PollModel pollModel = PollModel(
-                            id: snapshot.data!.docs[index].get("id"),
-                            creator: snapshot.data!.docs[index].get("creator"),
-                            title: title,
-                            description:
-                                snapshot.data!.docs[index].get("description"),
-                            images: snapshot.data!.docs[index].get("images"),
-                            options: snapshot.data!.docs[index].get("options"),
-                            anonim: snapshot.data!.docs[index].get("anonim"),
-                            multivote:
-                                snapshot.data!.docs[index].get("multivote"),
-                            show: snapshot.data!.docs[index].get("show"),
-                            end: aDate,
-                            users: snapshot.data!.docs[index].get("users"),
-                          );
+                          PollModel pollModel =
+                              PollModel.fromDoc(snapshot.data!.docs[index]);
 
-                          Navigation.intentWithData(
-                              DetailVote.routeName, pollModel);
+                          Navigation.intentWithMultipleData(
+                            DetailVote.routeName,
+                            {'pollModel': pollModel, 'userModel': userModel},
+                          );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(15),
