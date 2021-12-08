@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
@@ -87,6 +89,48 @@ class ResultVote extends StatelessWidget {
                               )
                             ],
                           ),
+                          TextButton(
+                            onPressed: () {
+                              Clipboard.setData(
+                                      ClipboardData(text: poll.id.toString()))
+                                  .then((_) {
+                                const snackbar = SnackBar(
+                                    content: Text(
+                                        "Voting code copied successfully"));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackbar);
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(right: 14.0),
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color: colorSoftGray,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: const Icon(
+                                    Icons.tag,
+                                    color: colorGray,
+                                  ),
+                                ),
+                                Text(
+                                  poll.id.toString(),
+                                  style: textRegular.apply(color: Colors.black),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 20.0, right: 25.0, top: 18.0, bottom: 28.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Row(
                             children: [
                               Container(
@@ -107,30 +151,34 @@ class ResultVote extends StatelessWidget {
                               )
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 25.0, top: 18.0, bottom: 28.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(right: 14.0),
-                            padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: colorSoftGray,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: const Icon(
-                              Icons.tag,
-                              color: colorGray,
+                          TextButton(
+                            onPressed: () {
+                              Share.share(
+                                  "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${poll.id.toString()}",
+                                  subject:
+                                      "Download Votie now & use ${poll.id.toString()} to give your vote");
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(right: 14.0),
+                                  padding: const EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color: colorSoftGray,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: const Icon(
+                                    Icons.share_outlined,
+                                    color: colorGray,
+                                  ),
+                                ),
+                                Text(
+                                  "Share   ",
+                                  style: textRegular.apply(color: Colors.black),
+                                )
+                              ],
                             ),
                           ),
-                          Text(
-                            poll.id.toString(),
-                            style: textRegular.apply(color: Colors.black),
-                          )
                         ],
                       ),
                     ),
