@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:votie/data/model/option_model.dart';
 
 class DetailVoteProvider extends ChangeNotifier {
   final FirebaseFirestore firestore;
@@ -8,14 +9,23 @@ class DetailVoteProvider extends ChangeNotifier {
 
   final List<bool> _isOptionSelected = [];
 
-  List<bool> get getOption => _isOptionSelected;
+  List<OptionModel> _options = [];
 
-  setOption(bool option, int index) {
+  List<bool> get getOptionStatus => _isOptionSelected;
+
+  List<OptionModel> get getOptions => _options;
+
+  setOptions(List<OptionModel> options) {
+    _options = options;
+    notifyListeners();
+  }
+
+  setOptionStatus(bool option, int index) {
     _isOptionSelected[index] = option;
     notifyListeners();
   }
 
-  voteOption(String pollId, String username) async {
+  Future<void> voteOption(String pollId, String username) async {
     for (int i = 0; i < _isOptionSelected.length; i++) {
       if (_isOptionSelected[i]) {
         firestore
