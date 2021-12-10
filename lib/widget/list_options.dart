@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +45,8 @@ class _ListOptionsState extends State<ListOptions> {
           var isVoted = options.any(
               (element) => element.voter!.contains(widget.userModel.username!));
           double totalVote = 0;
-          for (var element in options) {
-            totalVote += element.voter!.length;
+          for (var option in options) {
+            totalVote += option.voter!.length;
           }
           Future.delayed(Duration.zero, () async {
             Provider.of<DetailVoteProvider>(context, listen: false)
@@ -61,7 +59,6 @@ class _ListOptionsState extends State<ListOptions> {
                   var option = options[index];
                   var isChecked =
                       option.voter!.contains(widget.userModel.username);
-                  inspect(isChecked);
                   if (state.getOptionStatus.length < index + 1) {
                     state.getOptionStatus.insert(index, false);
                   }
@@ -128,7 +125,7 @@ class _ListOptionsState extends State<ListOptions> {
                             ),
                             trailing: isVoted
                                 ? Container(
-                                    margin: EdgeInsets.only(right: 20.0),
+                                    margin: const EdgeInsets.only(right: 20.0),
                                     child: Text(
                                       '${((option.voter!.length / totalVote) * 100).round()}%',
                                       style: (isVoted
@@ -150,7 +147,8 @@ class _ListOptionsState extends State<ListOptions> {
                               ? Stack(
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(bottom: 10.0),
+                                      margin:
+                                          const EdgeInsets.only(bottom: 10.0),
                                       width: _width,
                                       height: 13.0,
                                       decoration: BoxDecoration(
@@ -160,7 +158,8 @@ class _ListOptionsState extends State<ListOptions> {
                                       ),
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(bottom: 10.0),
+                                      margin:
+                                          const EdgeInsets.only(bottom: 10.0),
                                       width:
                                           ((option.voter!.length / totalVote) *
                                               _width),

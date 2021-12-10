@@ -32,43 +32,45 @@ class AddVote extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(
-                            bottom: 2.0, top: 60.0, right: 20.0, left: 20.0),
-                        child: Text(
-                          'Start your voting campaign',
-                          style: titleBoldWhite,
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(
-                            bottom: 15.0, right: 20.0, left: 20.0),
-                        child: Text(
-                          'And get best decision',
-                          style: textMedium.apply(color: Colors.white),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(
-                            bottom: 2.0, right: 20.0, left: 20.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigation.intentWithData(
-                                CreateVote.routeName, userModel);
-                          },
-                          child: const Text('Create Voting Now'),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: colorGreen,
+                  SafeArea(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(
+                              bottom: 2.0, top: 10.0, right: 20.0, left: 20.0),
+                          child: Text(
+                            'Start your voting campaign',
+                            style: titleBoldWhite,
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(
+                              bottom: 15.0, right: 20.0, left: 20.0),
+                          child: Text(
+                            'And get best decision',
+                            style: textMedium.apply(color: Colors.white),
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(
+                              bottom: 2.0, right: 20.0, left: 20.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigation.intentWithData(
+                                  CreateVote.routeName, userModel);
+                            },
+                            child: const Text('Create Voting Now'),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: colorGreen,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

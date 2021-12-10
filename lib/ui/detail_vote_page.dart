@@ -42,7 +42,6 @@ class _DetailVoteState extends State<DetailVote> {
                           color: Colors.black,
                         ),
                         onPressed: () {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
                           Navigation.back();
                         },
                       ),
@@ -77,78 +76,76 @@ class _DetailVoteState extends State<DetailVote> {
                             ),
                           )
                         : Container(),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 25.0, top: 28.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ],
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(20.0),
+                sliver: SliverGrid(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Row(
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(
-                                      text: widget.pollModel.id.toString()))
-                                  .then((_) {
-                                const snackbar = SnackBar(
-                                    content: Text(
-                                        "Voting code copied successfully"));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackbar);
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 14.0),
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color: colorSoftGray,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: const Icon(
-                                    Icons.tag,
-                                    color: colorGray,
-                                  ),
-                                ),
-                                Text(
-                                  widget.pollModel.id.toString(),
-                                  style: textRegular.apply(color: Colors.black),
-                                )
-                              ],
+                          Container(
+                            margin: const EdgeInsets.only(right: 14.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: colorSoftGray,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: colorGray,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 14.0),
-                                padding: const EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: colorSoftGray,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  color: colorGray,
-                                ),
-                              ),
-                              Text(
-                                widget.pollModel.creator ?? '',
-                                style: textRegular.apply(color: Colors.black),
-                              )
-                            ],
-                          ),
+                          Text(
+                            widget.pollModel.creator ?? '',
+                            style: textRegular.apply(color: Colors.black),
+                          )
                         ],
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 25.0, top: 18.0, bottom: 28.0),
-                      child: TextButton(
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(
+                                  text: widget.pollModel.id.toString()))
+                              .then((_) {
+                            const snackbar = SnackBar(
+                                content:
+                                    Text("Voting code copied successfully"));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
+                          });
+                        },
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 14.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: colorSoftGray,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Icon(
+                                Icons.tag,
+                                color: colorGray,
+                              ),
+                            ),
+                            Text(
+                              widget.pollModel.id.toString(),
+                              style: textRegular.apply(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                      TextButton(
                         onPressed: () {
                           Share.share(
                               "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${widget.pollModel.id.toString()}",
                               subject:
                                   "Download Votie now & use ${widget.pollModel.id.toString()} to give your vote");
                         },
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         child: Row(
                           children: [
                             Container(
@@ -170,14 +167,28 @@ class _DetailVoteState extends State<DetailVote> {
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300.0,
+                    crossAxisSpacing: 49.0,
+                    childAspectRatio: 2.0,
+                  ),
                 ),
               ),
               ListOptions(
                 pollModel: widget.pollModel,
                 userModel: widget.userModel,
               ),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      height: 80.0,
+                    )
+                  ],
+                ),
+              )
             ],
           ),
           Positioned(
@@ -195,7 +206,7 @@ class _DetailVoteState extends State<DetailVote> {
                               ? getColorByIndex(
                                   widget.pollModel.title!.codeUnitAt(0),
                                 )
-                              : colorSoftGray,
+                              : colorGray,
                         ),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -223,10 +234,11 @@ class _DetailVoteState extends State<DetailVote> {
                                   state.voteOption(widget.pollModel.id!,
                                       widget.userModel.username!);
                                 } catch (e) {
-                                  print(e);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.toString())));
                                 }
                               }
-                            : null,
+                            : () {},
                       )
                     : Container();
               },

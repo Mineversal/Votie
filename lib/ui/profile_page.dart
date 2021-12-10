@@ -21,29 +21,32 @@ class Profile extends StatelessWidget {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
+                  height: 200.0,
                   child: SvgPicture.asset(
                     'assets/images/bg_blue.svg',
                     fit: BoxFit.fill,
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          icon: const Icon(Icons.logout),
-                          color: Colors.white,
-                          onPressed: () {
-                            logout(context);
-                          },
+                SafeArea(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 1.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.logout),
+                            color: Colors.white,
+                            onPressed: () {
+                              logout(context);
+                            },
+                          ),
                         ),
-                      ),
-                      Image.asset('assets/images/profile_placeholder.png'),
-                    ],
+                        Image.asset('assets/images/profile_placeholder.png'),
+                      ],
+                    ),
                   ),
-                ),
+                )
               ],
             ),
             Container(

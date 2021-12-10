@@ -63,126 +63,124 @@ class ResultVote extends StatelessWidget {
                             ),
                           )
                         : Container(),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 25.0, top: 28.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 14.0),
-                                padding: const EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: colorSoftGray,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  color: colorGray,
-                                ),
-                              ),
-                              Text(
-                                poll.creator ?? '',
-                                style: textRegular.apply(color: Colors.black),
-                              )
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Clipboard.setData(
-                                      ClipboardData(text: poll.id.toString()))
-                                  .then((_) {
-                                const snackbar = SnackBar(
-                                    content: Text(
-                                        "Voting code copied successfully"));
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackbar);
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 14.0),
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color: colorSoftGray,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: const Icon(
-                                    Icons.tag,
-                                    color: colorGray,
-                                  ),
-                                ),
-                                Text(
-                                  poll.id.toString(),
-                                  style: textRegular.apply(color: Colors.black),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 25.0, top: 18.0, bottom: 28.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 14.0),
-                                padding: const EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: colorSoftGray,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: const Icon(
-                                  Icons.how_to_vote,
-                                  color: colorGray,
-                                ),
-                              ),
-                              Text(
-                                '${poll.voters != null ? poll.voters!.length : '0'} Voter',
-                                style: textRegular.apply(color: Colors.black),
-                              )
-                            ],
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Share.share(
-                                  "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${poll.id.toString()}",
-                                  subject:
-                                      "Download Votie now & use ${poll.id.toString()} to give your vote");
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 14.0),
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color: colorSoftGray,
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: const Icon(
-                                    Icons.share_outlined,
-                                    color: colorGray,
-                                  ),
-                                ),
-                                Text(
-                                  "Share   ",
-                                  style: textRegular.apply(color: Colors.black),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(20.0),
+                sliver: SliverGrid(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(right: 14.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: colorSoftGray,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              color: colorGray,
+                            ),
+                          ),
+                          Text(
+                            poll.creator ?? '',
+                            style: textRegular.apply(color: Colors.black),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(right: 14.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: colorSoftGray,
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: const Icon(
+                              Icons.how_to_vote,
+                              color: colorGray,
+                            ),
+                          ),
+                          Text(
+                            '${poll.voters != null ? poll.voters!.length : '0'} Voter',
+                            style: textRegular.apply(color: Colors.black),
+                          )
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(
+                                  ClipboardData(text: poll.id.toString()))
+                              .then((_) {
+                            const snackbar = SnackBar(
+                                content:
+                                    Text("Voting code copied successfully"));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
+                          });
+                        },
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 14.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: colorSoftGray,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Icon(
+                                Icons.tag,
+                                color: colorGray,
+                              ),
+                            ),
+                            Text(
+                              poll.id.toString(),
+                              style: textRegular.apply(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Share.share(
+                              "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${poll.id.toString()}",
+                              subject:
+                                  "Download Votie now & use ${poll.id.toString()} to give your vote");
+                        },
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 14.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: colorSoftGray,
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: const Icon(
+                                Icons.share_outlined,
+                                color: colorGray,
+                              ),
+                            ),
+                            Text(
+                              "Share",
+                              style: textRegular.apply(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300.0,
+                    crossAxisSpacing: 49.0,
+                    childAspectRatio: 2.0,
+                  ),
                 ),
               ),
               ListOptions(
@@ -218,6 +216,10 @@ class ListOptions extends StatelessWidget {
         builder: (context, snapshot) {
           var docs = snapshot.data != null ? snapshot.data!.docs : [];
           var options = docs.map((doc) => OptionModel.fromDoc(doc)).toList();
+          double totalVote = 0;
+          for (var option in options) {
+            totalVote += option.voter!.length;
+          }
           return SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               var option = options[index];
@@ -235,9 +237,9 @@ class ListOptions extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: pollModel.voters!.isEmpty
+                      width: totalVote == 0
                           ? 55.0
-                          : ((option.voter!.length / pollModel.voters!.length) *
+                          : ((option.voter!.length / totalVote) *
                                   (_width - 55)) +
                               55,
                       height: 55,

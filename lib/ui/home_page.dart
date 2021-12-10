@@ -38,85 +38,87 @@ class _HomeState extends State<Home> {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(
-                            bottom: 20.0, top: 60.0, right: 20.0, left: 20.0),
-                        child: Text(
-                          'Welcome to Votie!',
-                          style: titleBoldOrange,
+                  SafeArea(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(
+                              bottom: 20.0, top: 10.0, right: 20.0, left: 20.0),
+                          child: Text(
+                            'Welcome to Votie!',
+                            style: titleBoldOrange,
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        padding: const EdgeInsets.all(25.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.06),
-                              spreadRadius: 10,
-                              blurRadius: 30,
-                              offset: const Offset(
-                                  2, 4), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Enter voting code',
-                                style: titleBoldBlack,
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                          padding: const EdgeInsets.all(25.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.06),
+                                spreadRadius: 10,
+                                blurRadius: 30,
+                                offset: const Offset(
+                                    2, 4), // changes position of shadow
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                'To give your vote',
-                                style: textRegular,
+                            ],
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Enter voting code',
+                                  style: titleBoldBlack,
+                                ),
                               ),
-                            ),
-                            Container(
-                              color: const Color(0xFFFAFAFA),
-                              margin: const EdgeInsets.only(top: 20.0),
-                              padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  top: 5.0,
-                                  right: 5.0,
-                                  bottom: 5.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _searchController,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Ex: 234RGG',
-                                        hintStyle: textRegular,
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(top: 5.0),
+                                child: Text(
+                                  'To give your vote',
+                                  style: textRegular,
+                                ),
+                              ),
+                              Container(
+                                color: const Color(0xFFFAFAFA),
+                                margin: const EdgeInsets.only(top: 20.0),
+                                padding: const EdgeInsets.only(
+                                    left: 20.0,
+                                    top: 5.0,
+                                    right: 5.0,
+                                    bottom: 5.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _searchController,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'Ex: 234RGG',
+                                          hintStyle: textRegular,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () => searchPoll(),
-                                    child: const Text('Enter'),
-                                    style: ElevatedButton.styleFrom(
-                                        primary: colorOrange),
-                                  )
-                                ],
+                                    ElevatedButton(
+                                      onPressed: () => searchPoll(),
+                                      child: const Text('Enter'),
+                                      style: ElevatedButton.styleFrom(
+                                          primary: colorOrange),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  )
                 ],
               ),
               Container(
@@ -160,10 +162,15 @@ class _HomeState extends State<Home> {
               .update({
             'users': FieldValue.arrayUnion([widget.userModel.username])
           });
-          const snackbar = SnackBar(
-              content: Text("Voting code has been successfully reedemed"));
-          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+          // const snackbar = SnackBar(
+          //     content: Text("Voting code has been successfully reedemed"));
+          // ScaffoldMessenger.of(context).showSnackBar(snackbar);
           _searchController.text = "";
+          PollModel pollModel = PollModel.fromDoc(value.docs[0]);
+          Navigation.intentWithMultipleData(
+            DetailVote.routeName,
+            {'pollModel': pollModel, 'userModel': widget.userModel},
+          );
           return;
         } else {
           const snackbar = SnackBar(content: Text("Voting code is not found"));
