@@ -7,6 +7,7 @@ import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/create_vote_provider.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
+import 'package:votie/provider/result_vote_provider.dart';
 import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/ui/login_page.dart';
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) =>
               CreateVoteProvider(firestore: FirebaseFirestore.instance),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ResultVoteProvider(),
         ),
       ],
       child: MaterialApp(
