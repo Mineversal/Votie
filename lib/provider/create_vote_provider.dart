@@ -54,7 +54,7 @@ class CreateVoteProvider extends ChangeNotifier {
     if (options.length >= index + 1) {
       options[index] = option;
     } else {
-      if (index == 1) {
+      if (index == 1 && options.isEmpty) {
         options.insert(0, OptionModel(id: 0, images: '', title: ''));
         options.insert(index, option);
       } else {
