@@ -129,7 +129,9 @@ class DetailOption extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                option.voter![index],
+                                poll.anonim!
+                                    ? 'Anonymous'
+                                    : option.voter![index],
                                 style: textRegular.apply(color: Colors.black),
                               ),
                             ],

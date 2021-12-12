@@ -163,7 +163,9 @@ class OptionTypeList extends StatelessWidget {
                           ? Container(
                               margin: const EdgeInsets.only(right: 20.0),
                               child: Text(
-                                '${((option.voter!.length / totalVote) * 100).round()}%',
+                                option.voter!.isNotEmpty
+                                    ? '${((option.voter!.length / totalVote) * 100).round()}%'
+                                    : '0%',
                                 style: (isVoted
                                         ? isChecked
                                         : state.getOptionStatus[index])
@@ -191,8 +193,10 @@ class OptionTypeList extends StatelessWidget {
                               ),
                               Container(
                                 margin: const EdgeInsets.only(bottom: 10.0),
-                                width: ((option.voter!.length / totalVote) *
-                                    _width),
+                                width: option.voter!.isNotEmpty
+                                    ? ((option.voter!.length / totalVote) *
+                                        _width)
+                                    : 0,
                                 height: 13.0,
                                 decoration: BoxDecoration(
                                   color: (isVoted
