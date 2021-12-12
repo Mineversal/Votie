@@ -128,6 +128,23 @@ class ListYourVote extends StatelessWidget {
                     String updatedDate;
 
                     if (aDate == today) {
+                      var newFormat = DateFormat("Hm");
+                      updatedDate = newFormat.format(dateToCheck);
+                      if (aDate == now || aDate.isAfter(now)) {
+                        var id = snapshot.data!.docs[index].get("id");
+                        bool show = snapshot.data!.docs[index].get("show");
+                        if (show == true) {
+                          var newFormat = DateFormat("yMMMd");
+                          updatedDate = newFormat.format(dateToCheck);
+                          FirebaseFirestore.instance
+                              .collection("polls")
+                              .doc(id)
+                              .update({"show": false});
+                        }
+                      }
+                    } else {
+                      var newFormat = DateFormat("yMMMd");
+                      updatedDate = newFormat.format(dateToCheck);
                       if (aDate.isAfter(now)) {
                         var id = snapshot.data!.docs[index].get("id");
                         bool show = snapshot.data!.docs[index].get("show");
@@ -140,23 +157,6 @@ class ListYourVote extends StatelessWidget {
                               .update({"show": false});
                         }
                       }
-                      var newFormat = DateFormat("Hm");
-                      updatedDate = newFormat.format(dateToCheck);
-                    } else {
-                      if (aDate.isBefore(now)) {
-                        var id = snapshot.data!.docs[index].get("id");
-                        bool show = snapshot.data!.docs[index].get("show");
-                        if (show == true) {
-                          var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(dateToCheck);
-                          FirebaseFirestore.instance
-                              .collection("polls")
-                              .doc(id)
-                              .update({"show": false});
-                        }
-                      }
-                      var newFormat = DateFormat("yMMMd");
-                      updatedDate = newFormat.format(dateToCheck);
                     }
 
                     var jumlahOpsi = snapshot.data!.docs[index].get("options");
