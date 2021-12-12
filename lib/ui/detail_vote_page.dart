@@ -43,6 +43,9 @@ class _DetailVoteState extends State<DetailVote> {
                         ),
                         onPressed: () {
                           Navigation.back();
+                          Provider.of<DetailVoteProvider>(context,
+                                  listen: false)
+                              .clear();
                         },
                       ),
                     ),
@@ -277,10 +280,10 @@ class _DetailVoteState extends State<DetailVote> {
               try {
                 state.voteOption(
                     widget.pollModel.id!, widget.userModel.username!);
-                const snackbar = SnackBar(
-                    content: Text("Successfully vote"));
+                const snackbar = SnackBar(content: Text("Successfully vote"));
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
                 Navigator.of(context).pop(false);
+                state.clear();
               } catch (e) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -297,5 +300,11 @@ class _DetailVoteState extends State<DetailVote> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    Provider.of<DetailVoteProvider>(context, listen: false).clear();
+    super.dispose();
   }
 }

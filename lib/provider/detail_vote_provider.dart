@@ -7,13 +7,17 @@ class DetailVoteProvider extends ChangeNotifier {
 
   DetailVoteProvider({required this.firestore});
 
-  final List<bool> _isOptionSelected = [];
+  List<bool> _isOptionSelected = [];
 
   List<OptionModel> _options = [];
 
   List<bool> get getOptionStatus => _isOptionSelected;
 
   List<OptionModel> get getOptions => _options;
+
+  clear() {
+    _isOptionSelected = [];
+  }
 
   setOptions(List<OptionModel> options) {
     _options = options;

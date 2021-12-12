@@ -28,18 +28,49 @@ class DetailOption extends StatelessWidget {
                     height: 130.0,
                     margin: const EdgeInsets.only(right: 20),
                     color: getSoftColorByIndex(poll.title!.codeUnitAt(0)),
-                    child: Center(
-                      child: Text(
-                        option.title[0].toString().toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 40.0,
-                          fontWeight: FontWeight.bold,
-                          color: getColorByIndex(
-                            poll.title!.codeUnitAt(0),
+                    child: option.images!.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(5.0),
+                            child: Image.network(
+                              option.images!,
+                              fit: BoxFit.cover,
+                              height: 130.0,
+                              width: 130.0,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return SizedBox(
+                                    height: 130.0,
+                                    width: 130.0,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: getColorByIndex(
+                                            poll.title!.codeUnitAt(0)),
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    ));
+                              },
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              option.title[0].toString().toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 40.0,
+                                fontWeight: FontWeight.bold,
+                                color: getColorByIndex(
+                                  poll.title!.codeUnitAt(0),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
