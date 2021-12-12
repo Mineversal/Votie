@@ -19,85 +19,119 @@ class AddVote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var paddingTop = MediaQuery.of(context).padding.top;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 1.125,
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: SvgPicture.asset(
-                      'assets/images/bg_green.svg',
-                      fit: BoxFit.fill,
+        body: CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          expandedHeight: 269.0 - paddingTop,
+          floating: false,
+          pinned: true,
+          elevation: 0.9,
+          toolbarHeight: 60,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          flexibleSpace: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              var top = constraints.biggest.height;
+              return FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                centerTitle: true,
+                title: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: top == MediaQuery.of(context).padding.top + 60
+                      ? 1.0
+                      : 0.0,
+                  child: Container(
+                    alignment: Alignment.bottomLeft,
+                    margin: const EdgeInsets.only(left: 20.0),
+                    child: Text(
+                      'Vote You Made',
+                      style: titleMediumBlack,
                     ),
                   ),
-                  SafeArea(
-                    child: Column(
+                ),
+                background: Column(
+                  children: [
+                    Stack(
                       children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.only(
-                              bottom: 2.0, top: 10.0, right: 20.0, left: 20.0),
-                          child: Text(
-                            'Start your voting campaign',
-                            style: titleBoldWhite,
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: SvgPicture.asset(
+                            'assets/images/bg_green.svg',
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.only(
-                              bottom: 15.0, right: 20.0, left: 20.0),
-                          child: Text(
-                            'And get best decision',
-                            style: textMedium.apply(color: Colors.white),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.only(
-                              bottom: 2.0, right: 20.0, left: 20.0),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (!await ConnectionHelper.checkConnection()) {
-                                return;
-                              }
-                              Navigation.intentWithData(
-                                  CreateVote.routeName, userModel);
-                            },
-                            child: const Text('Create Voting Now'),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onPrimary: colorGreen,
-                            ),
+                        SafeArea(
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(
+                                    bottom: 2.0,
+                                    top: 10.0,
+                                    right: 20.0,
+                                    left: 20.0),
+                                child: Text(
+                                  'Start your voting campaign',
+                                  style: titleBoldWhite,
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(
+                                    bottom: 15.0, right: 20.0, left: 20.0),
+                                child: Text(
+                                  'And get best decision',
+                                  style: textMedium.apply(color: Colors.white),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(
+                                    bottom: 2.0, right: 20.0, left: 20.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (!await ConnectionHelper
+                                        .checkConnection()) {
+                                      return;
+                                    }
+                                    Navigation.intentWithData(
+                                        CreateVote.routeName, userModel);
+                                  },
+                                  child: const Text('Create Voting Now'),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.white,
+                                    onPrimary: colorGreen,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.all(20.0),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Vote You Made',
-                  style: titleMediumBlack,
+                    Container(
+                      margin: const EdgeInsets.all(20.0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Vote You Made',
+                        style: titleMediumBlack,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: ListYourVote(userModel: userModel),
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ),
-      ),
-    );
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          sliver: ListYourVote(
+            userModel: userModel,
+          ),
+        )
+      ],
+    ));
   }
 }
 
@@ -122,10 +156,8 @@ class ListYourVote extends StatelessWidget {
         builder: (context, snapshot) {
           return snapshot.hasData
               ? (snapshot.data!.docs.isNotEmpty
-                  ? ListView.builder(
-                      padding: const EdgeInsets.only(top: 0),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
                         PollModel pollModel =
                             PollModel.fromDoc(snapshot.data!.docs[index]);
                         DateTime aDate = DateTimeHelper.timeStampToDay(
@@ -309,28 +341,33 @@ class ListYourVote extends StatelessWidget {
                             ),
                           ),
                         );
-                      },
+                      }, childCount: snapshot.data!.docs.length),
                     )
-                  : Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin:
-                                const EdgeInsets.only(top: 90, bottom: 30.0),
-                            child: SvgPicture.asset(
-                              'assets/images/your_vote_placeholder.svg',
-                              fit: BoxFit.fill,
+                  : SliverToBoxAdapter(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(top: 90, bottom: 30.0),
+                              child: SvgPicture.asset(
+                                'assets/images/your_vote_placeholder.svg',
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'You haven\'t made a vote yet, start your voting campaign now!',
-                            style: textRegular,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                            Text(
+                              'You haven\'t made a vote yet, start your voting campaign now!',
+                              style: textRegular,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ))
-              : const Center(child: Text("You didn't create any Vote"));
+              : const SliverToBoxAdapter(
+                  child: Center(
+                  child: Text("You didn't create any Vote"),
+                ));
         });
   }
 }
