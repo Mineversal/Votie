@@ -15,6 +15,7 @@ import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
 import 'package:votie/ui/result_vote_page.dart';
 import 'package:provider/provider.dart';
+import 'package:votie/widget/no_connection_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
                 pollModel:
                     ModalRoute.of(context)?.settings.arguments as PollModel,
               ),
+          NoConnectionPage.routeName: (context) => const NoConnectionPage(),
         },
       ),
     );

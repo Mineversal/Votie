@@ -7,6 +7,7 @@ import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:votie/ui/detail_vote_page.dart';
+import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
 
 class Home extends StatefulWidget {
@@ -146,6 +147,9 @@ class _HomeState extends State<Home> {
   }
 
   searchPoll() async {
+    if (!await ConnectionHelper.checkConnection()) {
+      return;
+    }
     if (_searchController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please fill up voting code field')));
@@ -210,148 +214,176 @@ class ListRecentVote extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           return snapshot.hasData
-              ? ListView.builder(
-                  padding: const EdgeInsets.only(top: 0),
-                  scrollDirection: Axis.vertical,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    PollModel pollModel =
-                        PollModel.fromDoc(snapshot.data!.docs[index]);
-                    DateTime aDate = DateTimeHelper.timeStampToDay(
-                        snapshot.data!.docs[index].get("end"));
-                    String updatedDate;
+              ? (snapshot.data!.docs.isNotEmpty
+                  ? ListView.builder(
+                      padding: const EdgeInsets.only(top: 0),
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        PollModel pollModel =
+                            PollModel.fromDoc(snapshot.data!.docs[index]);
+                        DateTime aDate = DateTimeHelper.timeStampToDay(
+                            snapshot.data!.docs[index].get("end"));
+                        String updatedDate;
 
-                    if (aDate == today) {
-                      var newFormat = DateFormat("Hm");
-                      updatedDate = newFormat.format(pollModel.end!);
-                      if (pollModel.end!.isAtSameMomentAs(now) ||
-                          pollModel.end!.isBefore(now)) {
-                        var id = pollModel.id;
-                        bool show = pollModel.show!;
-                        if (show == true) {
+                        if (aDate == today) {
                           var newFormat = DateFormat("Hm");
                           updatedDate = newFormat.format(pollModel.end!);
-                          FirebaseFirestore.instance
-                              .collection("polls")
-                              .doc(id)
-                              .update({"show": false});
-                        }
-                      }
-                    } else {
-                      var newFormat = DateFormat("yMMMd");
-                      updatedDate = newFormat.format(pollModel.end!);
-                      if (pollModel.end!.isBefore(now)) {
-                        var id = pollModel.id;
-                        bool show = pollModel.show!;
-                        if (show == true) {
-                          var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(pollModel.end!);
-                          FirebaseFirestore.instance
-                              .collection("polls")
-                              .doc(id)
-                              .update({"show": false});
-                        }
-                      }
-                    }
-
-                    var title = snapshot.data!.docs[index].get("title");
-
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 15.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.06),
-                            spreadRadius: 5,
-                            blurRadius: 20,
-                            offset: const Offset(
-                                2, 2), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      child: TextButton(
-                        onPressed: () {
-                          if (aDate == today) {
-                            if (pollModel.end!.isAtSameMomentAs(now) ||
-                                pollModel.end!.isBefore(now)) {
-                              var id = pollModel.id;
-                              bool show = pollModel.show!;
-                              if (show == true) {
-                                FirebaseFirestore.instance
-                                    .collection("polls")
-                                    .doc(id)
-                                    .update({"show": false});
-                              }
-                            }
-                          } else {
-                            if (pollModel.end!.isBefore(now)) {
-                              var id = pollModel.id;
-                              bool show = pollModel.show!;
-                              if (show == true) {
-                                FirebaseFirestore.instance
-                                    .collection("polls")
-                                    .doc(id)
-                                    .update({"show": false});
-                              }
+                          if (pollModel.end!.isAtSameMomentAs(now) ||
+                              pollModel.end!.isBefore(now)) {
+                            var id = pollModel.id;
+                            bool show = pollModel.show!;
+                            if (show == true) {
+                              var newFormat = DateFormat("Hm");
+                              updatedDate = newFormat.format(pollModel.end!);
+                              FirebaseFirestore.instance
+                                  .collection("polls")
+                                  .doc(id)
+                                  .update({"show": false});
                             }
                           }
-                          Navigation.intentWithMultipleData(
-                            DetailVote.routeName,
-                            {'pollModel': pollModel, 'userModel': userModel},
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 60.0,
-                                height: 60.0,
-                                color: getSoftColorByIndex(title.codeUnitAt(0)),
-                                child: Center(
-                                  child: Text(
-                                    title[0].toString().toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: getColorByIndex(
-                                        title.codeUnitAt(0),
+                        } else {
+                          var newFormat = DateFormat("yMMMd");
+                          updatedDate = newFormat.format(pollModel.end!);
+                          if (pollModel.end!.isBefore(now)) {
+                            var id = pollModel.id;
+                            bool show = pollModel.show!;
+                            if (show == true) {
+                              var newFormat = DateFormat("yMMMd");
+                              updatedDate = newFormat.format(pollModel.end!);
+                              FirebaseFirestore.instance
+                                  .collection("polls")
+                                  .doc(id)
+                                  .update({"show": false});
+                            }
+                          }
+                        }
+
+                        var title = snapshot.data!.docs[index].get("title");
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 15.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.06),
+                                spreadRadius: 5,
+                                blurRadius: 20,
+                                offset: const Offset(
+                                    2, 2), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          width: MediaQuery.of(context).size.width,
+                          child: TextButton(
+                            onPressed: () async {
+                              if (aDate == today) {
+                                if (pollModel.end!.isAtSameMomentAs(now) ||
+                                    pollModel.end!.isBefore(now)) {
+                                  var id = pollModel.id;
+                                  bool show = pollModel.show!;
+                                  if (show == true) {
+                                    FirebaseFirestore.instance
+                                        .collection("polls")
+                                        .doc(id)
+                                        .update({"show": false});
+                                  }
+                                }
+                              } else {
+                                if (pollModel.end!.isBefore(now)) {
+                                  var id = pollModel.id;
+                                  bool show = pollModel.show!;
+                                  if (show == true) {
+                                    FirebaseFirestore.instance
+                                        .collection("polls")
+                                        .doc(id)
+                                        .update({"show": false});
+                                  }
+                                }
+                              }
+                              if (!await ConnectionHelper.checkConnection()) {
+                                return;
+                              }
+                              Navigation.intentWithMultipleData(
+                                DetailVote.routeName,
+                                {
+                                  'pollModel': pollModel,
+                                  'userModel': userModel
+                                },
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    color: getSoftColorByIndex(
+                                        title.codeUnitAt(0)),
+                                    child: Center(
+                                      child: Text(
+                                        title[0].toString().toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: getColorByIndex(
+                                            title.codeUnitAt(0),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Text(
+                                            title,
+                                            style: textMedium,
+                                          ),
+                                        ),
+                                        Text(
+                                          'End $updatedDate',
+                                          style: textRegular,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin:
-                                          const EdgeInsets.only(bottom: 5.0),
-                                      child: Text(
-                                        title,
-                                        style: textMedium,
-                                      ),
-                                    ),
-                                    Text(
-                                      'End $updatedDate',
-                                      style: textRegular,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Column(
+                        children: [
+                          Container(
+                            margin:
+                                const EdgeInsets.only(top: 60, bottom: 30.0),
+                            child: SvgPicture.asset(
+                              'assets/images/recent_vote_placeholder.svg',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          Text(
+                            'No  recent vote found, give your vote now by entering voting code!',
+                            style: textRegular,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                )
+                    ))
               : const Center(child: Text("Your Vote List is Empty"));
         });
   }
