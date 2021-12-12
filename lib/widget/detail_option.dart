@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/provider/result_vote_provider.dart';

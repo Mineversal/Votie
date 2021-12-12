@@ -197,8 +197,9 @@ class _DetailVoteState extends State<DetailVote> {
             right: 0.0,
             child: Consumer<DetailVoteProvider>(
               builder: (context, state, _) {
-                return !state.getOptions.any((option) =>
-                        option.voter!.contains(widget.userModel.username))
+                return !state.getOptions.any((option) => option.voter!
+                            .contains(widget.userModel.username)) &&
+                        widget.pollModel.show == true
                     ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: state.getOptionStatus

@@ -87,6 +87,7 @@ class OptionTypeList extends StatelessWidget {
     var _width = MediaQuery.of(context).size.width - 80;
     var isVoted =
         options.any((element) => element.voter!.contains(userModel.username!));
+    var isShow = pollModel.show!;
     double totalVote = 0;
     for (var option in options) {
       totalVote += option.voter!.length;
@@ -105,7 +106,7 @@ class OptionTypeList extends StatelessWidget {
               state.getOptionStatus.insert(index, false);
             }
             return InkWell(
-              onTap: isVoted
+              onTap: isVoted || isShow == false
                   ? null
                   : () {
                       var isSelected = !state.getOptionStatus[index];
@@ -141,7 +142,7 @@ class OptionTypeList extends StatelessWidget {
                         value:
                             isVoted ? isChecked : state.getOptionStatus[index],
                         shape: const CircleBorder(),
-                        onChanged: isVoted
+                        onChanged: isVoted || isShow == false
                             ? null
                             : (bool? value) {
                                 state.setOptionStatus(value!, index);
@@ -158,7 +159,7 @@ class OptionTypeList extends StatelessWidget {
                                   )
                                 : textMedium,
                       ),
-                      trailing: isVoted
+                      trailing: isVoted || isShow == false
                           ? Container(
                               margin: const EdgeInsets.only(right: 20.0),
                               child: Text(
@@ -176,7 +177,7 @@ class OptionTypeList extends StatelessWidget {
                             )
                           : const Text(''),
                     ),
-                    isVoted
+                    isVoted || isShow == false
                         ? Stack(
                             children: [
                               Container(
@@ -240,6 +241,7 @@ class OptionTypeGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     var isVoted =
         options.any((element) => element.voter!.contains(userModel.username!));
+    var isShow = pollModel.show!;
     double totalVote = 0;
     for (var option in options) {
       totalVote += option.voter!.length;
@@ -264,7 +266,7 @@ class OptionTypeGrid extends StatelessWidget {
               state.getOptionStatus.insert(index, false);
             }
             return InkWell(
-              onTap: isVoted
+              onTap: isVoted || isShow == false
                   ? null
                   : () {
                       var isSelected = !state.getOptionStatus[index];
@@ -341,7 +343,7 @@ class OptionTypeGrid extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                          isVoted
+                          isVoted || isShow == false
                               ? Container(
                                   height: 140,
                                   decoration: BoxDecoration(
@@ -350,7 +352,7 @@ class OptionTypeGrid extends StatelessWidget {
                                   ),
                                 )
                               : Container(),
-                          isVoted
+                          isVoted || isShow == false
                               ? SizedBox(
                                   height: 140,
                                   child: Column(
@@ -397,7 +399,7 @@ class OptionTypeGrid extends StatelessWidget {
                         value:
                             isVoted ? isChecked : state.getOptionStatus[index],
                         shape: const CircleBorder(),
-                        onChanged: isVoted
+                        onChanged: isVoted || isShow == false
                             ? null
                             : (bool? value) {
                                 state.setOptionStatus(value!, index);

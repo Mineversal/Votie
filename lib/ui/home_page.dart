@@ -156,22 +156,29 @@ class _HomeState extends State<Home> {
           .get()
           .then((value) {
         if (value.size > 0) {
-          firestore
-              .collection("polls")
-              .doc(_searchController.text.toUpperCase())
-              .update({
-            'users': FieldValue.arrayUnion([widget.userModel.username])
-          });
-          // const snackbar = SnackBar(
-          //     content: Text("Voting code has been successfully reedemed"));
-          // ScaffoldMessenger.of(context).showSnackBar(snackbar);
-          _searchController.text = "";
           PollModel pollModel = PollModel.fromDoc(value.docs[0]);
-          Navigation.intentWithMultipleData(
-            DetailVote.routeName,
-            {'pollModel': pollModel, 'userModel': widget.userModel},
-          );
-          return;
+          if (pollModel.show == true) {
+            firestore
+                .collection("polls")
+                .doc(_searchController.text.toUpperCase())
+                .update({
+              'users': FieldValue.arrayUnion([widget.userModel.username])
+            });
+            // const snackbar = SnackBar(
+            //     content: Text("Voting code has been successfully reedemed"));
+            // ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            _searchController.text = "";
+            Navigation.intentWithMultipleData(
+              DetailVote.routeName,
+              {'pollModel': pollModel, 'userModel': widget.userModel},
+            );
+            return;
+          } else {
+            const snackbar =
+                SnackBar(content: Text("Voting code has been expired"));
+            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            return;
+          }
         } else {
           const snackbar = SnackBar(content: Text("Voting code is not found"));
           ScaffoldMessenger.of(context).showSnackBar(snackbar);
@@ -215,23 +222,33 @@ class ListRecentVote extends StatelessWidget {
                         dateToCheck.year, dateToCheck.month, dateToCheck.day);
                     String updatedDate;
                     if (aDate == today) {
+                      if (aDate.isAfter(now)) {
+                        var id = snapshot.data!.docs[index].get("id");
+                        bool show = snapshot.data!.docs[index].get("show");
+                        if (show == true) {
+                          var newFormat = DateFormat("yMMMd");
+                          updatedDate = newFormat.format(dateToCheck);
+                          FirebaseFirestore.instance
+                              .collection("polls")
+                              .doc(id)
+                              .update({"show": false});
+                        }
+                      }
                       var newFormat = DateFormat("Hm");
                       updatedDate = newFormat.format(dateToCheck);
-                    } else if (aDate.isBefore(today)) {
-                      var id = snapshot.data!.docs[index].get("id");
-                      bool show = snapshot.data!.docs[index].get("show");
-                      if (show == true) {
-                        FirebaseFirestore.instance
-                            .collection("polls")
-                            .doc(id)
-                            .update({"show": false});
-                        var newFormat = DateFormat("yMMMd");
-                        updatedDate = newFormat.format(dateToCheck);
-                      } else {
-                        var newFormat = DateFormat("yMMMd");
-                        updatedDate = newFormat.format(dateToCheck);
-                      }
                     } else {
+                      if (aDate.isBefore(now)) {
+                        var id = snapshot.data!.docs[index].get("id");
+                        bool show = snapshot.data!.docs[index].get("show");
+                        if (show == true) {
+                          var newFormat = DateFormat("yMMMd");
+                          updatedDate = newFormat.format(dateToCheck);
+                          FirebaseFirestore.instance
+                              .collection("polls")
+                              .doc(id)
+                              .update({"show": false});
+                        }
+                      }
                       var newFormat = DateFormat("yMMMd");
                       updatedDate = newFormat.format(dateToCheck);
                     }
