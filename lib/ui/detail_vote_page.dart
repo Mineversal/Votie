@@ -231,13 +231,7 @@ class _DetailVoteState extends State<DetailVote> {
                         onPressed: state.getOptionStatus
                                 .any((option) => option != false)
                             ? () {
-                                try {
-                                  state.voteOption(widget.pollModel.id!,
-                                      widget.userModel.username!);
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(e.toString())));
-                                }
+                                confirm(context, state);
                               }
                             : () {},
                       )
@@ -248,5 +242,60 @@ class _DetailVoteState extends State<DetailVote> {
         ],
       ),
     ));
+  }
+
+  Future<void> confirm(BuildContext context, DetailVoteProvider state) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Are you sure?',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        content: Text(
+          'Do you want choose this?',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        actions: [
+          TextButton(
+            child: const Text("CANCEL"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: TextButton.styleFrom(
+              primary: colorRed,
+              backgroundColor: Colors.transparent,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 1),
+          ElevatedButton(
+            child: const Text("CONFIRM"),
+            onPressed: () {
+              try {
+                state.voteOption(
+                    widget.pollModel.id!, widget.userModel.username!);
+                const snackbar = SnackBar(
+                    content: Text("Successfully vote"));
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                Navigator.of(context).pop(false);
+              } catch (e) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(e.toString())));
+                Navigator.of(context).pop(false);
+              }
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: colorGreen,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
+    );
   }
 }

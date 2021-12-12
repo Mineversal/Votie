@@ -277,7 +277,7 @@ class ListYourVote extends StatelessWidget {
                     );
                   },
                 )
-              : const Center(child: Text("Belum Ada Voting Buatanmu"));
+              : const Center(child: Text("You didn't create any Vote"));
         });
   }
 }

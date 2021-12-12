@@ -328,7 +328,7 @@ class ListRecentVote extends StatelessWidget {
                     );
                   },
                 )
-              : const Center(child: Text("List Vote mu Masih Kosong"));
+              : const Center(child: Text("Your Vote List is Empty"));
         });
   }
 }

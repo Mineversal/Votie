@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/provider/result_vote_provider.dart';
+import 'package:votie/ui/menu_page.dart';
 import 'package:votie/widget/count_down_timer.dart';
 import 'package:votie/widget/list_options_result.dart';
 
@@ -42,13 +44,24 @@ class ResultVote extends StatelessWidget {
                   [
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                        ),
-                        onPressed: () => (Navigation.back()),
-                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => (Navigation.back()),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => confirm(context, poll),
+                            ),
+                          ]),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -205,5 +218,57 @@ class ResultVote extends StatelessWidget {
         },
       ),
     ));
+  }
+
+  Future<void> confirm(BuildContext context, PollModel poll) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Are you sure?',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        content: Text(
+          'Do you want delete this poll?',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        actions: [
+          TextButton(
+            child: const Text("CANCEL"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: TextButton.styleFrom(
+              primary: colorGreen,
+              backgroundColor: Colors.transparent,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 1),
+          ElevatedButton(
+            child: const Text("CONFIRM"),
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection("polls")
+                  .doc(poll.id)
+                  .delete();
+              FirebaseStorage.instance.ref("images/polls/${poll.id}/").delete();
+              const snackbar = SnackBar(
+                  content: Text("Polling has been successfully deleted"));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              Navigator.pushReplacementNamed(context, Menu.routeName);
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: colorRed,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
+    );
   }
 }
