@@ -9,6 +9,7 @@ import 'package:votie/data/model/user_model.dart';
 import 'package:intl/intl.dart';
 import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/result_vote_page.dart';
+import 'package:votie/utils/date_time_helper.dart';
 
 class AddVote extends StatelessWidget {
   final UserModel userModel;
@@ -122,17 +123,19 @@ class ListYourVote extends StatelessWidget {
                   itemBuilder: (context, index) {
                     PollModel pollModel =
                         PollModel.fromDoc(snapshot.data!.docs[index]);
+                    DateTime aDate = DateTimeHelper.timeStampToDay(
+                        snapshot.data!.docs[index].get("end"));
                     String updatedDate;
 
-                    if (pollModel.end == today) {
+                    if (aDate == today) {
                       var newFormat = DateFormat("Hm");
                       updatedDate = newFormat.format(pollModel.end!);
                       if (pollModel.end!.isAtSameMomentAs(now) ||
                           pollModel.end!.isBefore(now)) {
-                        var id = snapshot.data!.docs[index].get("id");
-                        bool show = snapshot.data!.docs[index].get("show");
+                        var id = pollModel.id;
+                        bool show = pollModel.show!;
                         if (show == true) {
-                          var newFormat = DateFormat("yMMMd");
+                          var newFormat = DateFormat("Hm");
                           updatedDate = newFormat.format(pollModel.end!);
                           FirebaseFirestore.instance
                               .collection("polls")
@@ -144,8 +147,8 @@ class ListYourVote extends StatelessWidget {
                       var newFormat = DateFormat("yMMMd");
                       updatedDate = newFormat.format(pollModel.end!);
                       if (pollModel.end!.isBefore(now)) {
-                        var id = snapshot.data!.docs[index].get("id");
-                        bool show = snapshot.data!.docs[index].get("show");
+                        var id = pollModel.id;
+                        bool show = pollModel.show!;
                         if (show == true) {
                           var newFormat = DateFormat("yMMMd");
                           updatedDate = newFormat.format(pollModel.end!);

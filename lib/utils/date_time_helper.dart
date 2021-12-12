@@ -11,6 +11,14 @@ class DateTimeHelper {
   static DateTime timeStampToDateTime(Timestamp time) {
     DateTime dateToCheck =
         DateTime.fromMicrosecondsSinceEpoch(time.microsecondsSinceEpoch);
+    DateTime aDate = DateTime(dateToCheck.year, dateToCheck.month,
+        dateToCheck.day, dateToCheck.hour, dateToCheck.minute);
+    return aDate;
+  }
+
+  static DateTime timeStampToDay(Timestamp time) {
+    DateTime dateToCheck =
+        DateTime.fromMicrosecondsSinceEpoch(time.microsecondsSinceEpoch);
     DateTime aDate =
         DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day);
     return aDate;
