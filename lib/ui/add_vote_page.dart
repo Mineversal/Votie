@@ -190,6 +190,30 @@ class ListYourVote extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: TextButton(
                         onPressed: () {
+                          if (aDate == today) {
+                            if (pollModel.end!.isAtSameMomentAs(now) ||
+                                pollModel.end!.isBefore(now)) {
+                              var id = pollModel.id;
+                              bool show = pollModel.show!;
+                              if (show == true) {
+                                FirebaseFirestore.instance
+                                    .collection("polls")
+                                    .doc(id)
+                                    .update({"show": false});
+                              }
+                            }
+                          } else {
+                            if (pollModel.end!.isBefore(now)) {
+                              var id = pollModel.id;
+                              bool show = pollModel.show!;
+                              if (show == true) {
+                                FirebaseFirestore.instance
+                                    .collection("polls")
+                                    .doc(id)
+                                    .update({"show": false});
+                              }
+                            }
+                          }
                           Navigation.intentWithData(
                               ResultVote.routeName, pollModel);
                         },
