@@ -214,23 +214,20 @@ class ListRecentVote extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    Timestamp time =
-                        snapshot.data!.docs[index].get("end"); //from firebase
-                    DateTime dateToCheck = DateTime.fromMicrosecondsSinceEpoch(
-                        time.microsecondsSinceEpoch);
-                    DateTime aDate = DateTime(
-                        dateToCheck.year, dateToCheck.month, dateToCheck.day);
+                    PollModel pollModel =
+                        PollModel.fromDoc(snapshot.data!.docs[index]);
                     String updatedDate;
 
-                    if (aDate == today) {
+                    if (pollModel.end == today) {
                       var newFormat = DateFormat("Hm");
-                      updatedDate = newFormat.format(dateToCheck);
-                      if (aDate == now || aDate.isAfter(now)) {
+                      updatedDate = newFormat.format(pollModel.end!);
+                      if (pollModel.end!.isAtSameMomentAs(now) ||
+                          pollModel.end!.isBefore(now)) {
                         var id = snapshot.data!.docs[index].get("id");
                         bool show = snapshot.data!.docs[index].get("show");
                         if (show == true) {
                           var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(dateToCheck);
+                          updatedDate = newFormat.format(pollModel.end!);
                           FirebaseFirestore.instance
                               .collection("polls")
                               .doc(id)
@@ -239,13 +236,13 @@ class ListRecentVote extends StatelessWidget {
                       }
                     } else {
                       var newFormat = DateFormat("yMMMd");
-                      updatedDate = newFormat.format(dateToCheck);
-                      if (aDate.isAfter(now)) {
+                      updatedDate = newFormat.format(pollModel.end!);
+                      if (pollModel.end!.isBefore(now)) {
                         var id = snapshot.data!.docs[index].get("id");
                         bool show = snapshot.data!.docs[index].get("show");
                         if (show == true) {
                           var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(dateToCheck);
+                          updatedDate = newFormat.format(pollModel.end!);
                           FirebaseFirestore.instance
                               .collection("polls")
                               .doc(id)
@@ -274,9 +271,6 @@ class ListRecentVote extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: TextButton(
                         onPressed: () {
-                          PollModel pollModel =
-                              PollModel.fromDoc(snapshot.data!.docs[index]);
-
                           Navigation.intentWithMultipleData(
                             DetailVote.routeName,
                             {'pollModel': pollModel, 'userModel': userModel},

@@ -120,22 +120,20 @@ class ListYourVote extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 0),
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    Timestamp time = snapshot.data!.docs[index].get("end");
-                    DateTime dateToCheck = DateTime.fromMicrosecondsSinceEpoch(
-                        time.microsecondsSinceEpoch);
-                    DateTime aDate = DateTime(
-                        dateToCheck.year, dateToCheck.month, dateToCheck.day);
+                    PollModel pollModel =
+                        PollModel.fromDoc(snapshot.data!.docs[index]);
                     String updatedDate;
 
-                    if (aDate == today) {
+                    if (pollModel.end == today) {
                       var newFormat = DateFormat("Hm");
-                      updatedDate = newFormat.format(dateToCheck);
-                      if (aDate == now || aDate.isAfter(now)) {
+                      updatedDate = newFormat.format(pollModel.end!);
+                      if (pollModel.end!.isAtSameMomentAs(now) ||
+                          pollModel.end!.isBefore(now)) {
                         var id = snapshot.data!.docs[index].get("id");
                         bool show = snapshot.data!.docs[index].get("show");
                         if (show == true) {
                           var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(dateToCheck);
+                          updatedDate = newFormat.format(pollModel.end!);
                           FirebaseFirestore.instance
                               .collection("polls")
                               .doc(id)
@@ -144,13 +142,13 @@ class ListYourVote extends StatelessWidget {
                       }
                     } else {
                       var newFormat = DateFormat("yMMMd");
-                      updatedDate = newFormat.format(dateToCheck);
-                      if (aDate.isAfter(now)) {
+                      updatedDate = newFormat.format(pollModel.end!);
+                      if (pollModel.end!.isBefore(now)) {
                         var id = snapshot.data!.docs[index].get("id");
                         bool show = snapshot.data!.docs[index].get("show");
                         if (show == true) {
                           var newFormat = DateFormat("yMMMd");
-                          updatedDate = newFormat.format(dateToCheck);
+                          updatedDate = newFormat.format(pollModel.end!);
                           FirebaseFirestore.instance
                               .collection("polls")
                               .doc(id)
@@ -159,9 +157,8 @@ class ListYourVote extends StatelessWidget {
                       }
                     }
 
-                    var jumlahOpsi = snapshot.data!.docs[index].get("options");
-
-                    List voter = snapshot.data!.docs[index].get("voters");
+                    var jumlahOpsi = pollModel.options;
+                    List voter = pollModel.voters!;
                     var jumlahVoter = voter.length;
 
                     if (jumlahVoter.isNaN) {
@@ -170,7 +167,7 @@ class ListYourVote extends StatelessWidget {
                       jumlahVoter = jumlahVoter;
                     }
 
-                    var title = snapshot.data!.docs[index].get("title");
+                    var title = pollModel.title!;
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 15.0),
@@ -190,22 +187,6 @@ class ListYourVote extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: TextButton(
                         onPressed: () {
-                          PollModel pollModel = PollModel(
-                            id: snapshot.data!.docs[index].get("id"),
-                            creator: snapshot.data!.docs[index].get("creator"),
-                            title: title,
-                            description:
-                                snapshot.data!.docs[index].get("description"),
-                            images: snapshot.data!.docs[index].get("images"),
-                            options: jumlahOpsi,
-                            anonim: snapshot.data!.docs[index].get("anonim"),
-                            multivote:
-                                snapshot.data!.docs[index].get("multivote"),
-                            show: snapshot.data!.docs[index].get("show"),
-                            end: aDate,
-                            users: snapshot.data!.docs[index].get("users"),
-                          );
-
                           Navigation.intentWithData(
                               ResultVote.routeName, pollModel);
                         },
