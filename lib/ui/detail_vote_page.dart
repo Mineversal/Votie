@@ -371,7 +371,6 @@ class _DetailVoteState extends State<DetailVote> {
 
   @override
   void dispose() {
-    Provider.of<DetailVoteProvider>(context, listen: false).clear();
     super.dispose();
   }
 }

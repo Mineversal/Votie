@@ -424,9 +424,24 @@ class ListRecentVote extends StatelessWidget {
                       ),
                     ),
                   ))
-            : const SliverToBoxAdapter(
+            : SliverToBoxAdapter(
                 child: Center(
-                  child: Text("Your Vote List is Empty"),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 60, bottom: 30.0),
+                        child: SvgPicture.asset(
+                          'assets/images/recent_vote_placeholder.svg',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Text(
+                        'No  recent vote found, give your vote now by entering voting code!',
+                        style: textRegular,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               );
       },

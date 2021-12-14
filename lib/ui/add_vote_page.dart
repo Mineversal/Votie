@@ -361,10 +361,26 @@ class ListYourVote extends StatelessWidget {
                         ),
                       ),
                     ))
-              : const SliverToBoxAdapter(
+              : SliverToBoxAdapter(
                   child: Center(
-                  child: Text("You didn't create any Vote"),
-                ));
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 90, bottom: 30.0),
+                          child: SvgPicture.asset(
+                            'assets/images/your_vote_placeholder.svg',
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Text(
+                          'You haven\'t made a vote yet, start your voting campaign now!',
+                          style: textRegular,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
         });
   }
 }

@@ -145,7 +145,13 @@ class OptionTypeList extends StatelessWidget {
                         onChanged: isVoted || isShow == false
                             ? null
                             : (bool? value) {
-                                state.setOptionStatus(value!, index);
+                                if (!pollModel.multivote!) {
+                                  for (int i = 0;
+                                      i < state.getOptionStatus.length;
+                                      i++) {
+                                    state.getOptionStatus[i] = false;
+                                  }
+                                }
                               },
                       ),
                       title: Text(
