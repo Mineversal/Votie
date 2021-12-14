@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ntp/ntp.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
@@ -135,7 +136,7 @@ class AddVote extends StatelessWidget {
   }
 }
 
-class ListYourVote extends StatelessWidget {
+class ListYourVote extends StatefulWidget {
   final UserModel userModel;
 
   const ListYourVote({
@@ -144,15 +145,35 @@ class ListYourVote extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ListYourVote> createState() => _ListYourVoteState();
+}
+
+class _ListYourVoteState extends State<ListYourVote> {
+  var _dateNow = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNTPTime();
+  }
+
+  void _loadNTPTime() async {
+    var ntpDateNow = await NTP.now();
+    setState(() {
+      _dateNow = ntpDateNow;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
+    DateTime now = _dateNow;
     DateTime today = DateTime(now.year, now.month, now.day);
     DateTime detailNow =
         DateTime(now.year, now.month, now.day, now.hour, now.minute);
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("polls")
-            .where("creator", isEqualTo: userModel.username)
+            .where("creator", isEqualTo: widget.userModel.username)
             .orderBy("end", descending: true)
             .snapshots(),
         builder: (context, snapshot) {

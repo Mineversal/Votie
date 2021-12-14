@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ntp/ntp.dart';
 import 'package:random_string/random_string.dart';
 import 'package:votie/data/model/option_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -23,6 +24,7 @@ class CreateVoteProvider extends ChangeNotifier {
   var isAnonvote = false;
   var isLoading = false;
   var itemCount = 2;
+  var dateNow = DateTime.now();
 
   final List<OptionModel> options = [];
 
@@ -35,6 +37,12 @@ class CreateVoteProvider extends ChangeNotifier {
     isAnonvote = false;
     isMultivote = false;
     options.clear();
+  }
+
+  void loadNTPTime() async {
+    var ntpDateNow = await NTP.now();
+    dateNow = ntpDateNow;
+    notifyListeners();
   }
 
   Future<String?> uploadImage(File file, String fileName) async {

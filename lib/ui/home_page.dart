@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ntp/ntp.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
@@ -225,7 +226,7 @@ class _HomeState extends State<Home> {
   }
 }
 
-class ListRecentVote extends StatelessWidget {
+class ListRecentVote extends StatefulWidget {
   final UserModel userModel;
 
   const ListRecentVote({
@@ -234,15 +235,35 @@ class ListRecentVote extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ListRecentVote> createState() => _ListRecentVoteState();
+}
+
+class _ListRecentVoteState extends State<ListRecentVote> {
+  var _dateNow = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNTPTime();
+  }
+
+  void _loadNTPTime() async {
+    var ntpDateNow = await NTP.now();
+    setState(() {
+      _dateNow = ntpDateNow;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
+    DateTime now = _dateNow;
     DateTime today = DateTime(now.year, now.month, now.day);
     DateTime detailNow =
         DateTime(now.year, now.month, now.day, now.hour, now.minute);
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection("polls")
-          .where("users", arrayContains: userModel.username)
+          .where("users", arrayContains: widget.userModel.username)
           .orderBy("end", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -325,7 +346,7 @@ class ListRecentVote extends StatelessWidget {
                                     DetailVote.routeName,
                                     {
                                       'pollModel': pollModel,
-                                      'userModel': userModel
+                                      'userModel': widget.userModel
                                     },
                                   );
                                 } else {
@@ -333,7 +354,7 @@ class ListRecentVote extends StatelessWidget {
                                     DetailVote.routeName,
                                     {
                                       'pollModel': pollModel,
-                                      'userModel': userModel
+                                      'userModel': widget.userModel
                                     },
                                   );
                                 }
@@ -342,7 +363,7 @@ class ListRecentVote extends StatelessWidget {
                                   DetailVote.routeName,
                                   {
                                     'pollModel': pollModel,
-                                    'userModel': userModel
+                                    'userModel': widget.userModel
                                   },
                                 );
                               }

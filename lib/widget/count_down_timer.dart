@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,19 +8,41 @@ import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:ntp/ntp.dart';
 
-class CountDownTimer extends StatelessWidget {
+class CountDownTimer extends StatefulWidget {
   final PollModel poll;
+
+  const CountDownTimer({Key? key, required this.poll}) : super(key: key);
+
+  @override
+  State<CountDownTimer> createState() => _CountDownTimerState();
+}
+
+class _CountDownTimerState extends State<CountDownTimer> {
   final StopWatchTimer _stopWatchTimer =
       StopWatchTimer(mode: StopWatchMode.countDown);
 
-  CountDownTimer({Key? key, required this.poll}) : super(key: key);
+  var _dateNow = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNTPTime();
+  }
+
+  void _loadNTPTime() async {
+    var ntpDateNow = await NTP.now();
+    setState(() {
+      _dateNow = ntpDateNow;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var endDate = poll.end ?? DateTime.now();
-    var dateNow = DateTime.now();
-    var difference = endDate.difference(dateNow).inMilliseconds;
+    var endDate = widget.poll.end ?? _dateNow;
+    var difference = endDate.difference(_dateNow).inMilliseconds;
+    _stopWatchTimer.clearPresetTime();
     _stopWatchTimer.setPresetTime(mSec: difference);
     _stopWatchTimer.onExecute.add(StopWatchExecute.start);
     return StreamBuilder<int>(
@@ -33,7 +57,7 @@ class CountDownTimer extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 40,
                 child: SvgPicture.asset(
-                  getOptionBg(poll.title.toString().codeUnitAt(0)),
+                  getOptionBg(widget.poll.title.toString().codeUnitAt(0)),
                   fit: BoxFit.fill,
                 ),
               ),
