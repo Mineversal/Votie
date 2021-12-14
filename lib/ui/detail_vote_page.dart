@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
+import 'package:votie/ui/menu_page.dart';
 import 'package:votie/utils/date_time_helper.dart';
 import 'package:votie/widget/list_options.dart';
 
@@ -36,18 +38,29 @@ class _DetailVoteState extends State<DetailVote> {
                   [
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          Navigation.back();
-                          Provider.of<DetailVoteProvider>(context,
-                                  listen: false)
-                              .clear();
-                        },
-                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                Navigation.back();
+                                Provider.of<DetailVoteProvider>(context,
+                                        listen: false)
+                                    .clear();
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.black,
+                              ),
+                              onPressed: () => confirmDelete(context),
+                            ),
+                          ]),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -293,6 +306,60 @@ class _DetailVoteState extends State<DetailVote> {
             style: TextButton.styleFrom(
               primary: Colors.white,
               backgroundColor: colorGreen,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
+    );
+  }
+
+  Future<void> confirmDelete(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Are you sure?',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        content: Text(
+          'Do you want delete this poll in your polling list?',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        actions: [
+          TextButton(
+            child: const Text("CANCEL"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: TextButton.styleFrom(
+              primary: colorGreen,
+              backgroundColor: Colors.transparent,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 1),
+          ElevatedButton(
+            child: const Text("CONFIRM"),
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection("polls")
+                  .doc(widget.pollModel.id)
+                  .update({
+                'users': FieldValue.arrayRemove([widget.userModel.username])
+              });
+              const snackbar = SnackBar(
+                  content: Text(
+                      "Polling has been successfully deleted from your polling list"));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              Navigator.pushReplacementNamed(context, Menu.routeName);
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: colorRed,
               textStyle: Theme.of(context).textTheme.subtitle1,
             ),
           ),

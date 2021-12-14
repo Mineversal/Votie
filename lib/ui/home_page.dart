@@ -237,6 +237,8 @@ class ListRecentVote extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
+    DateTime detailNow =
+        DateTime(now.year, now.month, now.day, now.hour, now.minute);
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection("polls")
@@ -257,8 +259,8 @@ class ListRecentVote extends StatelessWidget {
                       if (aDate == today) {
                         var newFormat = DateFormat("Hm");
                         updatedDate = newFormat.format(pollModel.end!);
-                        if (pollModel.end!.isAtSameMomentAs(now) ||
-                            pollModel.end!.isBefore(now)) {
+                        if (pollModel.end!.isBefore(detailNow) ||
+                            pollModel.end!.isAtSameMomentAs(detailNow)) {
                           var id = pollModel.id;
                           bool show = pollModel.show!;
                           if (show == true) {
@@ -273,7 +275,7 @@ class ListRecentVote extends StatelessWidget {
                       } else {
                         var newFormat = DateFormat("yMMMd");
                         updatedDate = newFormat.format(pollModel.end!);
-                        if (pollModel.end!.isBefore(now)) {
+                        if (pollModel.end!.isBefore(detailNow)) {
                           var id = pollModel.id;
                           bool show = pollModel.show!;
                           if (show == true) {
@@ -307,37 +309,44 @@ class ListRecentVote extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: TextButton(
                           onPressed: () async {
-                            if (aDate == today) {
-                              if (pollModel.end!.isAtSameMomentAs(now) ||
-                                  pollModel.end!.isBefore(now)) {
-                                var id = pollModel.id;
-                                bool show = pollModel.show!;
-                                if (show == true) {
-                                  FirebaseFirestore.instance
-                                      .collection("polls")
-                                      .doc(id)
-                                      .update({"show": false});
-                                }
-                              }
-                            } else {
-                              if (pollModel.end!.isBefore(now)) {
-                                var id = pollModel.id;
-                                bool show = pollModel.show!;
-                                if (show == true) {
-                                  FirebaseFirestore.instance
-                                      .collection("polls")
-                                      .doc(id)
-                                      .update({"show": false});
-                                }
-                              }
-                            }
                             if (!await ConnectionHelper.checkConnection()) {
                               return;
+                            } else {
+                              if (pollModel.end!.isBefore(detailNow) ||
+                                  pollModel.end!.isAtSameMomentAs(detailNow)) {
+                                var id = pollModel.id;
+                                bool show = pollModel.show!;
+                                if (show == true) {
+                                  FirebaseFirestore.instance
+                                      .collection("polls")
+                                      .doc(id)
+                                      .update({"show": false});
+                                  Navigation.intentWithMultipleData(
+                                    DetailVote.routeName,
+                                    {
+                                      'pollModel': pollModel,
+                                      'userModel': userModel
+                                    },
+                                  );
+                                } else {
+                                  Navigation.intentWithMultipleData(
+                                    DetailVote.routeName,
+                                    {
+                                      'pollModel': pollModel,
+                                      'userModel': userModel
+                                    },
+                                  );
+                                }
+                              } else {
+                                Navigation.intentWithMultipleData(
+                                  DetailVote.routeName,
+                                  {
+                                    'pollModel': pollModel,
+                                    'userModel': userModel
+                                  },
+                                );
+                              }
                             }
-                            Navigation.intentWithMultipleData(
-                              DetailVote.routeName,
-                              {'pollModel': pollModel, 'userModel': userModel},
-                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(15),
