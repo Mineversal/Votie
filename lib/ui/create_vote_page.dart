@@ -28,6 +28,12 @@ class _CreateVoteState extends State<CreateVote> {
 
   final Map<int, XFile?> _optionsImage = {};
 
+  @override
+  void initState() {
+    Provider.of<CreateVoteProvider>(context, listen: false).loadNTPTime();
+    super.initState();
+  }
+
   pickImage(int index) async {
     ImageSource? imageSource;
     var isRemove = false;
@@ -187,13 +193,13 @@ class _CreateVoteState extends State<CreateVote> {
                                 onPressed: () {
                                   DatePicker.showDateTimePicker(context,
                                       showTitleActions: true,
-                                      minTime: DateTime.now(),
+                                      minTime: state.dateNow,
                                       onConfirm: (date) {
                                     setState(() {
                                       _selectedDate = date;
                                     });
                                   },
-                                      currentTime: DateTime.now(),
+                                      currentTime: state.dateNow,
                                       locale: LocaleType.en);
                                 },
                               ),
@@ -387,9 +393,6 @@ class _CreateVoteState extends State<CreateVote> {
   void dispose() {
     _titleController.dispose();
     _descController.dispose();
-    Future.delayed(Duration.zero, () async {
-      Provider.of<CreateVoteProvider>(context, listen: false).clear();
-    });
     super.dispose();
   }
 }
