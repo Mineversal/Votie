@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ntp/ntp.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
@@ -10,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/shimmer_loading.dart';
 
 class Home extends StatefulWidget {
   final UserModel userModel;
@@ -267,6 +269,9 @@ class _ListRecentVoteState extends State<ListRecentVote> {
           .orderBy("end", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const ShimmerLoading(count: 3);
+        }
         return snapshot.hasData
             ? (snapshot.data!.docs.isNotEmpty
                 ? SliverList(

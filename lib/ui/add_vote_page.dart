@@ -12,6 +12,7 @@ import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/result_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/shimmer_loading.dart';
 
 class AddVote extends StatelessWidget {
   final UserModel userModel;
@@ -177,6 +178,10 @@ class _ListYourVoteState extends State<ListYourVote> {
             .orderBy("end", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const ShimmerLoading(count: 3);
+          }
+
           return snapshot.hasData
               ? (snapshot.data!.docs.isNotEmpty
                   ? SliverList(
