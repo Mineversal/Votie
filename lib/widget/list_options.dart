@@ -372,7 +372,9 @@ class OptionTypeGrid extends StatelessWidget {
                                             const EdgeInsets.only(top: 10.0),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          '${((option.voter!.length / totalVote) * 100).round()}%',
+                                          option.voter!.isNotEmpty
+                                              ? '${((option.voter!.length / totalVote) * 100).round()}%'
+                                              : '0%',
                                           style: textMedium.apply(
                                               color: Colors.white),
                                         ),
@@ -380,12 +382,16 @@ class OptionTypeGrid extends StatelessWidget {
                                       Container(
                                         margin: EdgeInsets.only(
                                             top: 108.0 -
-                                                (option.voter!.length /
-                                                        totalVote) *
+                                                (option.voter!.isNotEmpty
+                                                        ? option.voter!.length /
+                                                            totalVote
+                                                        : 0) *
                                                     108.0),
-                                        height:
-                                            (option.voter!.length / totalVote) *
-                                                108.0,
+                                        height: (option.voter!.isNotEmpty
+                                                ? option.voter!.length /
+                                                    totalVote
+                                                : 0) *
+                                            108.0,
                                         width: 20,
                                         color: (isVoted
                                                 ? isChecked
