@@ -194,6 +194,48 @@ class ResultVote extends StatelessWidget {
                             ],
                           ),
                         ),
+                        if (pollModel.multivote!)
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 14.0),
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: colorSoftGray,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: const Icon(
+                                  Icons.splitscreen,
+                                  color: colorGray,
+                                ),
+                              ),
+                              Text(
+                                'Multivote',
+                                style: textRegular.apply(color: Colors.black),
+                              )
+                            ],
+                          ),
+                        if (pollModel.multivote!)
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 14.0),
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: colorSoftGray,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: const Icon(
+                                  Icons.supervisor_account_rounded,
+                                  color: colorGray,
+                                ),
+                              ),
+                              Text(
+                                'Anonymous',
+                                style: textRegular.apply(color: Colors.black),
+                              )
+                            ],
+                          ),
                       ],
                     ),
                     gridDelegate:
