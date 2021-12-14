@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
+import 'package:votie/data/model/option_model.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/provider/result_vote_provider.dart';
 import 'package:votie/ui/menu_page.dart';
@@ -249,16 +250,54 @@ class ResultVote extends StatelessWidget {
           const SizedBox(width: 1),
           ElevatedButton(
             child: const Text("CONFIRM"),
-            onPressed: () {
-              FirebaseFirestore.instance
+            onPressed: () async {
+              CollectionReference _options = FirebaseFirestore.instance
                   .collection("polls")
                   .doc(poll.id)
-                  .delete();
-              FirebaseStorage.instance.ref("images/polls/${poll.id}/").delete();
-              const snackbar = SnackBar(
-                  content: Text("Polling has been successfully deleted"));
-              ScaffoldMessenger.of(context).showSnackBar(snackbar);
-              Navigator.pushReplacementNamed(context, Menu.routeName);
+                  .collection("options");
+              QuerySnapshot querySnapshot = await _options.get();
+              var listOption = querySnapshot.docs
+                  .map((doc) => OptionModel.fromDoc(doc))
+                  .toList();
+
+              ///querySnapshot.docs.map((option) => option.data()).toList();
+              var includeImage =
+                  listOption.any((option) => option.images!.isNotEmpty);
+              if (includeImage) {
+                for (var option in listOption) {
+                  if (option.images != "") {
+                    FirebaseStorage.instance
+                        .refFromURL(option.images!)
+                        .delete();
+                    _options.doc(option.id.toString()).delete();
+                  } else {
+                    _options.doc(option.id.toString()).delete();
+                  }
+                }
+                FirebaseStorage.instance
+                    .ref("images/polls/${poll.id}/")
+                    .delete();
+                FirebaseFirestore.instance
+                    .collection("polls")
+                    .doc(poll.id)
+                    .delete();
+                const snackbar = SnackBar(
+                    content: Text("Polling has been successfully deleted"));
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                Navigation.intentAndReplace(Menu.routeName);
+              } else {
+                for (var option in listOption) {
+                  _options.doc(option.id.toString()).delete();
+                }
+                FirebaseFirestore.instance
+                    .collection("polls")
+                    .doc(poll.id)
+                    .delete();
+                const snackbar = SnackBar(
+                    content: Text("Polling has been successfully deleted"));
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                Navigation.intentAndReplace(Menu.routeName);
+              }
             },
             style: TextButton.styleFrom(
               primary: Colors.white,

@@ -355,7 +355,7 @@ class _DetailVoteState extends State<DetailVote> {
                   content: Text(
                       "Polling has been successfully deleted from your polling list"));
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
-              Navigator.pushReplacementNamed(context, Menu.routeName);
+              Navigation.intentAndReplace(Menu.routeName);
             },
             style: TextButton.styleFrom(
               primary: Colors.white,
