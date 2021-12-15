@@ -168,7 +168,7 @@ class ResultVote extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             Share.share(
-                                "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${poll.id.toString()}",
+                                "Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${poll.id.toString()}",
                                 subject:
                                     "Download Votie now & use ${poll.id.toString()} to give your vote");
                           },
@@ -308,8 +308,6 @@ class ResultVote extends StatelessWidget {
               var listOption = querySnapshot.docs
                   .map((doc) => OptionModel.fromDoc(doc))
                   .toList();
-
-              ///querySnapshot.docs.map((option) => option.data()).toList();
               var includeImage =
                   listOption.any((option) => option.images!.isNotEmpty);
               if (includeImage) {

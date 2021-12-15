@@ -145,7 +145,7 @@ class _DetailVoteState extends State<DetailVote> {
                         TextButton(
                           onPressed: () {
                             Share.share(
-                                "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${widget.pollModel.id.toString()}",
+                                "Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${widget.pollModel.id.toString()}",
                                 subject:
                                     "Download Votie now & use ${widget.pollModel.id.toString()} to give your vote");
                           },
