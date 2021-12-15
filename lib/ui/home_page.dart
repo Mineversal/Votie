@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ntp/ntp.dart';
+import 'package:share/share.dart';
 import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
@@ -11,6 +12,7 @@ import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
 import 'package:votie/widget/shimmer_loading.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Home extends StatefulWidget {
   final UserModel userModel;
@@ -268,7 +270,8 @@ class _ListRecentVoteState extends State<ListRecentVote> {
           .orderBy("end", descending: true)
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            widget.userModel.username == null) {
           return const ShimmerLoading(count: 3);
         }
         return snapshot.hasData
@@ -332,27 +335,38 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                           ],
                         ),
                         width: MediaQuery.of(context).size.width,
-                        child: TextButton(
-                          onPressed: () async {
-                            if (!await ConnectionHelper.checkConnection()) {
-                              return;
-                            } else {
-                              if (pollModel.end!.isBefore(detailNow) ||
-                                  pollModel.end!.isAtSameMomentAs(detailNow)) {
-                                var id = pollModel.id;
-                                bool show = pollModel.show!;
-                                if (show == true) {
-                                  FirebaseFirestore.instance
-                                      .collection("polls")
-                                      .doc(id)
-                                      .update({"show": false});
-                                  Navigation.intentWithMultipleData(
-                                    DetailVote.routeName,
-                                    {
-                                      'pollModel': pollModel,
-                                      'userModel': widget.userModel
-                                    },
-                                  );
+                        child: Slidable(
+                          child: TextButton(
+                            onPressed: () async {
+                              if (!await ConnectionHelper.checkConnection()) {
+                                return;
+                              } else {
+                                if (pollModel.end!.isBefore(detailNow) ||
+                                    pollModel.end!
+                                        .isAtSameMomentAs(detailNow)) {
+                                  var id = pollModel.id;
+                                  bool show = pollModel.show!;
+                                  if (show == true) {
+                                    FirebaseFirestore.instance
+                                        .collection("polls")
+                                        .doc(id)
+                                        .update({"show": false});
+                                    Navigation.intentWithMultipleData(
+                                      DetailVote.routeName,
+                                      {
+                                        'pollModel': pollModel,
+                                        'userModel': widget.userModel
+                                      },
+                                    );
+                                  } else {
+                                    Navigation.intentWithMultipleData(
+                                      DetailVote.routeName,
+                                      {
+                                        'pollModel': pollModel,
+                                        'userModel': widget.userModel
+                                      },
+                                    );
+                                  }
                                 } else {
                                   Navigation.intentWithMultipleData(
                                     DetailVote.routeName,
@@ -362,67 +376,94 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                                     },
                                   );
                                 }
-                              } else {
-                                Navigation.intentWithMultipleData(
-                                  DetailVote.routeName,
-                                  {
-                                    'pollModel': pollModel,
-                                    'userModel': widget.userModel
-                                  },
-                                );
                               }
-                            }
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 60.0,
-                                  height: 60.0,
-                                  color:
-                                      getSoftColorByIndex(title.codeUnitAt(0)),
-                                  child: Center(
-                                    child: Text(
-                                      title[0].toString().toUpperCase(),
-                                      style: TextStyle(
-                                        fontSize: 25.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: getColorByIndex(
-                                          title.codeUnitAt(0),
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    color: getSoftColorByIndex(
+                                        title.codeUnitAt(0)),
+                                    child: Center(
+                                      child: Text(
+                                        title[0].toString().toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 25.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: getColorByIndex(
+                                            title.codeUnitAt(0),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 5.0),
-                                        child: Text(
-                                          title,
-                                          style: textMedium,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'End $updatedDate',
-                                            style: textRegular,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Text(
+                                            title,
+                                            style: textMedium,
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'End $updatedDate',
+                                              style: textRegular,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
+                          ),
+                          startActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  Share.share(
+                                      "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${pollModel.id.toString()}",
+                                      subject:
+                                          "Download Votie now & use ${pollModel.id.toString()} to give your vote");
+                                },
+                                backgroundColor: getColorByIndex(
+                                  title.codeUnitAt(0),
+                                ),
+                                foregroundColor: Colors.white,
+                                icon: Icons.share,
+                                label: 'Share vote',
+                              ),
+                            ],
+                          ),
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  confirmDelete(context, pollModel.id!);
+                                },
+                                backgroundColor: getColorByIndex(
+                                  title.codeUnitAt(0),
+                                ),
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete,
+                                label: 'Remove vote',
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -470,6 +511,60 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                 ),
               );
       },
+    );
+  }
+
+  Future<void> confirmDelete(BuildContext context, String pollId) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Are you sure?',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        content: Text(
+          'Do you want delete this poll in your polling list?',
+          style: Theme.of(context).textTheme.subtitle2,
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        actions: [
+          TextButton(
+            child: const Text("CANCEL"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            style: TextButton.styleFrom(
+              primary: colorGreen,
+              backgroundColor: Colors.transparent,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 1),
+          ElevatedButton(
+            child: const Text("CONFIRM"),
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection("polls")
+                  .doc(pollId)
+                  .update({
+                'users': FieldValue.arrayRemove([widget.userModel.username])
+              });
+              const snackbar = SnackBar(
+                  content: Text(
+                      "Polling has been successfully removed from your vote list"));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              Navigation.back();
+            },
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+              backgroundColor: colorRed,
+              textStyle: Theme.of(context).textTheme.subtitle1,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
     );
   }
 }

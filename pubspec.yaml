@@ -51,6 +51,7 @@ dependencies:
   connectivity_plus: ^2.1.0
   ntp: ^2.0.0
   shimmer: ^2.0.0
+  flutter_slidable: ^1.1.0
 
 dev_dependencies:
   flutter_test:
