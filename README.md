@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Acknowledgments
+
+Resource and illustration used on this project:
+
+- [DrawKit Classic](https://drawkit.com/product/drawkit-classic), see license [here](https://drawkit.com/license)
+- [Peach Illustration System](https://drawkit.com/product/peach-illustration-system), see license [here](https://drawkit.com/license)
