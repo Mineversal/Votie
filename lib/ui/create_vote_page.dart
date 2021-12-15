@@ -151,6 +151,7 @@ class _CreateVoteState extends State<CreateVote> {
                               autocorrect: false,
                               controller: _titleController,
                               style: textMedium,
+                              enabled: !state.isLoading,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Title',
@@ -165,6 +166,7 @@ class _CreateVoteState extends State<CreateVote> {
                               autocorrect: false,
                               controller: _descController,
                               style: textMedium,
+                              enabled: !state.isLoading,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Description',
@@ -190,18 +192,20 @@ class _CreateVoteState extends State<CreateVote> {
                                       ? textMedium.apply(color: colorGray)
                                       : textMedium,
                                 ),
-                                onPressed: () {
-                                  DatePicker.showDateTimePicker(context,
-                                      showTitleActions: true,
-                                      minTime: state.dateNow,
-                                      onConfirm: (date) {
-                                    setState(() {
-                                      _selectedDate = date;
-                                    });
-                                  },
-                                      currentTime: state.dateNow,
-                                      locale: LocaleType.en);
-                                },
+                                onPressed: state.isLoading
+                                    ? null
+                                    : () {
+                                        DatePicker.showDateTimePicker(context,
+                                            showTitleActions: true,
+                                            minTime: state.dateNow,
+                                            onConfirm: (date) {
+                                          setState(() {
+                                            _selectedDate = date;
+                                          });
+                                        },
+                                            currentTime: state.dateNow,
+                                            locale: LocaleType.en);
+                                      },
                               ),
                             ),
                             const Divider(
@@ -209,10 +213,12 @@ class _CreateVoteState extends State<CreateVote> {
                               thickness: 0.5,
                             ),
                             InkWell(
-                              onTap: () {
-                                state.isMultivote = !state.isMultivote;
-                                state.notify();
-                              },
+                              onTap: state.isLoading
+                                  ? null
+                                  : () {
+                                      state.isMultivote = !state.isMultivote;
+                                      state.notify();
+                                    },
                               child: ListTile(
                                 contentPadding: const EdgeInsets.all(0),
                                 leading: Checkbox(
@@ -221,10 +227,12 @@ class _CreateVoteState extends State<CreateVote> {
                                   activeColor: Colors.transparent,
                                   value: state.isMultivote,
                                   shape: const CircleBorder(),
-                                  onChanged: (bool? value) {
-                                    state.isMultivote = value!;
-                                    state.notify();
-                                  },
+                                  onChanged: state.isLoading
+                                      ? null
+                                      : (bool? value) {
+                                          state.isMultivote = value!;
+                                          state.notify();
+                                        },
                                 ),
                                 title: Text(
                                   'Multivote',
@@ -239,10 +247,12 @@ class _CreateVoteState extends State<CreateVote> {
                               thickness: 0.5,
                             ),
                             InkWell(
-                              onTap: () {
-                                state.isAnonvote = !state.isAnonvote;
-                                state.notify();
-                              },
+                              onTap: state.isLoading
+                                  ? null
+                                  : () {
+                                      state.isAnonvote = !state.isAnonvote;
+                                      state.notify();
+                                    },
                               child: ListTile(
                                 contentPadding: const EdgeInsets.all(0),
                                 leading: Checkbox(
@@ -251,10 +261,12 @@ class _CreateVoteState extends State<CreateVote> {
                                   activeColor: Colors.transparent,
                                   value: state.isAnonvote,
                                   shape: const CircleBorder(),
-                                  onChanged: (bool? value) {
-                                    state.isAnonvote = value!;
-                                    state.notify();
-                                  },
+                                  onChanged: state.isLoading
+                                      ? null
+                                      : (bool? value) {
+                                          state.isAnonvote = value!;
+                                          state.notify();
+                                        },
                                 ),
                                 title: Text(
                                   'Anonymous Vote',
@@ -302,6 +314,7 @@ class _CreateVoteState extends State<CreateVote> {
                               ListTile(
                                 title: TextField(
                                   autocorrect: false,
+                                  enabled: !state.isLoading,
                                   onChanged: (text) {
                                     if (index == state.itemCount - 1) {
                                       state.itemCount++;
@@ -323,9 +336,11 @@ class _CreateVoteState extends State<CreateVote> {
                                         )
                                       : Image.asset(
                                           'assets/images/add_image.png'),
-                                  onPressed: () {
-                                    pickImage(index);
-                                  },
+                                  onPressed: state.isLoading
+                                      ? null
+                                      : () {
+                                          pickImage(index);
+                                        },
                                   iconSize: 35.0,
                                 ),
                               ),

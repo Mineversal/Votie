@@ -49,10 +49,9 @@ class CreateVoteProvider extends ChangeNotifier {
     try {
       await storage.ref(fileName).putFile(file);
     } catch (e) {
-      throw e.toString();
-    } finally {
       isLoading = false;
       notifyListeners();
+      throw e.toString();
     }
     return storage.ref(fileName).getDownloadURL();
   }
