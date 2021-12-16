@@ -431,6 +431,8 @@ class OptionTypeGrid extends StatelessWidget {
                                     ),
                                   )
                                 : textMedium,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

@@ -102,10 +102,15 @@ class _DetailVoteState extends State<DetailVote> {
                                 color: colorGray,
                               ),
                             ),
-                            Text(
-                              widget.pollModel.creator ?? '',
-                              style: textRegular.apply(color: Colors.black),
-                            )
+                            Flexible(
+                              child: Text(
+                                widget.pollModel.creator ?? '',
+                                style: textRegular.apply(color: Colors.black),
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              ),
+                            ),
                           ],
                         ),
                         TextButton(

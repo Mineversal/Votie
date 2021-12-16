@@ -178,7 +178,8 @@ class _ListYourVoteState extends State<ListYourVote> {
             .orderBy("end", descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              widget.userModel.username == null) {
             return const ShimmerLoading(count: 3);
           }
 
@@ -299,66 +300,72 @@ class _ListYourVoteState extends State<ListYourVote> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              bottom: 5.0),
-                                          child: Text(
-                                            title,
-                                            style: textMedium,
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 5.0),
+                                            child: Text(
+                                              title,
+                                              style: textMedium,
+                                              overflow: TextOverflow.fade,
+                                              maxLines: 1,
+                                              softWrap: false,
+                                            ),
                                           ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 5.0),
-                                              child: const Icon(
-                                                Icons.person,
-                                                color: colorGray,
-                                                size: 18,
+                                          Row(
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 5.0),
+                                                child: const Icon(
+                                                  Icons.person,
+                                                  color: colorGray,
+                                                  size: 18,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              '$jumlahVoter Voter',
-                                              style: textRegular,
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 5.0, left: 15.0),
-                                              child: const Icon(
-                                                Icons.style,
-                                                color: colorGray,
-                                                size: 18,
+                                              Text(
+                                                '$jumlahVoter Voter',
+                                                style: textRegular,
                                               ),
-                                            ),
-                                            Text(
-                                              '$jumlahOpsi Option',
-                                              style: textRegular,
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(top: 5.0),
-                                          child: Text(
-                                            'End $updatedDate',
-                                            style: GoogleFonts.poppins(
-                                                color: getColorByIndex(
-                                                    title.codeUnitAt(0)),
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.normal),
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 5.0, left: 15.0),
+                                                child: const Icon(
+                                                  Icons.style,
+                                                  color: colorGray,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                              Text(
+                                                '$jumlahOpsi Option',
+                                                style: textRegular,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 5.0),
+                                            child: Text(
+                                              'End $updatedDate',
+                                              style: GoogleFonts.poppins(
+                                                  color: getColorByIndex(
+                                                      title.codeUnitAt(0)),
+                                                  fontSize: 14.0,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

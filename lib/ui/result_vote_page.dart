@@ -105,10 +105,15 @@ class ResultVote extends StatelessWidget {
                                 color: colorGray,
                               ),
                             ),
-                            Text(
-                              poll.creator ?? '',
-                              style: textRegular.apply(color: Colors.black),
-                            )
+                            Flexible(
+                              child: Text(
+                                pollModel.creator ?? '',
+                                style: textRegular.apply(color: Colors.black),
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                              ),
+                            ),
                           ],
                         ),
                         Row(

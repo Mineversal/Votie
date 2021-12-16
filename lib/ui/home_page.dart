@@ -400,32 +400,37 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              bottom: 5.0),
-                                          child: Text(
-                                            title,
-                                            style: textMedium,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'End $updatedDate',
-                                              style: textRegular,
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 5.0),
+                                            child: Text(
+                                              title,
+                                              style: textMedium,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.fade,
+                                              softWrap: false,
                                             ),
-                                          ],
-                                        ),
-                                      ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'End $updatedDate',
+                                                style: textRegular,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

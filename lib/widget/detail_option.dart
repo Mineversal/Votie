@@ -72,16 +72,38 @@ class DetailOption extends StatelessWidget {
                             ),
                           ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        option.title,
-                        style: textMedium,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          option.title,
+                          style: textMedium,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 14.0),
+                                padding: const EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: colorSoftGray,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: const Icon(
+                                  Icons.how_to_vote,
+                                  color: colorGray,
+                                ),
+                              ),
+                              Text(
+                                '${option.voter != null ? option.voter!.length : '0'} Voter',
+                                style: textRegular.apply(color: Colors.black),
+                              )
+                            ],
+                          ),
+                        ),
+                        Row(
                           children: [
                             Container(
                               margin: const EdgeInsets.only(right: 14.0),
@@ -91,38 +113,18 @@ class DetailOption extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               child: const Icon(
-                                Icons.how_to_vote,
+                                Icons.bar_chart,
                                 color: colorGray,
                               ),
                             ),
                             Text(
-                              '${option.voter != null ? option.voter!.length : '0'} Voter',
+                              '${option.voter!.isNotEmpty ? ((option.voter!.length / totalVote) * 100).round() : '0'}%',
                               style: textRegular.apply(color: Colors.black),
                             )
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(right: 14.0),
-                            padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: colorSoftGray,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: const Icon(
-                              Icons.bar_chart,
-                              color: colorGray,
-                            ),
-                          ),
-                          Text(
-                            '${option.voter!.isNotEmpty ? ((option.voter!.length / totalVote) * 100).round() : '0'}%',
-                            style: textRegular.apply(color: Colors.black),
-                          )
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

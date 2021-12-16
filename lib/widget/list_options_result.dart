@@ -148,11 +148,18 @@ class _ListOptionsResultState extends State<ListOptionsResult> {
                                       textBoldBlack.apply(color: colorDarkBlue),
                                 ),
                               ),
-                              Text(
-                                option.title,
-                                style:
-                                    textBoldBlack.apply(color: colorDarkBlue),
-                              )
+                              Container(
+                                constraints:
+                                    BoxConstraints(maxWidth: _width - 170),
+                                child: Text(
+                                  option.title,
+                                  style:
+                                      textBoldBlack.apply(color: colorDarkBlue),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ),
                             ],
                           ),
                           Container(
