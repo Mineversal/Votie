@@ -336,7 +336,8 @@ class ResultVote extends StatelessWidget {
                 const snackbar = SnackBar(
                     content: Text("Polling has been successfully deleted"));
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                Navigation.intentAndReplace(Menu.routeName);
+                Navigator.popUntil(
+                    context, (route) => route.settings.name == Menu.routeName);
               } else {
                 for (var option in listOption) {
                   _options.doc(option.id.toString()).delete();
@@ -348,7 +349,8 @@ class ResultVote extends StatelessWidget {
                 const snackbar = SnackBar(
                     content: Text("Polling has been successfully deleted"));
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                Navigation.intentAndReplace(Menu.routeName);
+                Navigator.popUntil(
+                    context, (route) => route.settings.name == Menu.routeName);
               }
             },
             style: TextButton.styleFrom(
