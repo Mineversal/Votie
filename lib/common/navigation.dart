@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'package:go_router/go_router.dart';
 
 class Navigation {
-  static intent(String routeName) {
-    navigatorKey.currentState?.pushNamed(routeName);
+  static intent(String routeName, BuildContext context) {
+    GoRouter.of(context).push(routeName);
   }
 
-  static intentWithData(String routeName, Object arguments) {
-    navigatorKey.currentState?.pushNamed(routeName, arguments: arguments);
+  static intentWithData(
+      String routeName, Object arguments, BuildContext context) {
+    GoRouter.of(context).push(routeName, extra: arguments);
   }
 
-  static intentWithMultipleData(
-      String routeName, Map<String, Object> arguments) {
-    navigatorKey.currentState?.pushNamed(routeName, arguments: arguments);
+  static intentAndReplace(String routeName, BuildContext context) {
+    GoRouter.of(context).go(routeName);
   }
 
-  static intentAndReplace(String routeName) {
-    navigatorKey.currentState?.pushReplacementNamed(routeName);
-  }
-
-  static back() => navigatorKey.currentState?.pop();
+  static back(BuildContext context) => Navigator.pop(context);
 }

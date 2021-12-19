@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/ui/register_page.dart';
 
 class Login extends StatefulWidget {
   static const routeName = '/login';
-  const Login({Key? key}) : super(key: key);
+  final String? from;
+  const Login({Key? key, this.from}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -121,7 +123,7 @@ class _LoginState extends State<Login> {
                   TextButton(
                     child: const Text('Dont Have an Account? Sign Up'),
                     onPressed: () {
-                      Navigator.pushNamed(context, Register.routeName);
+                      Navigation.intent(Register.routeName, context);
                     },
                   ),
                 ],
@@ -142,7 +144,11 @@ class _LoginState extends State<Login> {
       final password = _passwordController.text;
 
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      Navigator.pushReplacementNamed(context, Menu.routeName);
+      if (widget.from != null) {
+        Navigation.intentAndReplace(widget.from!, context);
+      } else {
+        Navigation.intentAndReplace(Menu.routeName, context);
+      }
     } catch (e) {
       final snackbar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);

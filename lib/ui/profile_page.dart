@@ -154,8 +154,8 @@ class Profile extends StatelessWidget {
           ElevatedButton(
             child: const Text("LOGOUT"),
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigation.intentAndReplace(Login.routeName);
+              await FirebaseAuth.instance.signOut().then((value) =>
+                  Navigation.intentAndReplace(Login.routeName, context));
             },
             style: TextButton.styleFrom(
               primary: Colors.white,

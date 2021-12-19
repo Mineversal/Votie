@@ -47,5 +47,20 @@
 		<string>to let user pick image for their options</string>
 		<key>NSCameraUsageDescription</key>
 		<string>to let user take a picture for their options</string>
+		<key>FlutterDeepLinkingEnabled</key>
+		<true/>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>votie.mineversal.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>votie</string>
+			</array>
+			</dict>
+		</array>
 	</dict>
 </plist>

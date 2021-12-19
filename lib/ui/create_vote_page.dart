@@ -119,7 +119,7 @@ class _CreateVoteState extends State<CreateVote> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            Navigation.back();
+                            Navigation.back(context);
                             state.clear();
                           },
                         ),
@@ -376,7 +376,7 @@ class _CreateVoteState extends State<CreateVote> {
                                       _descController.text.toString(),
                                       _selectedDate,
                                       _optionsImage);
-                                  Navigation.back();
+                                  Navigation.back(context);
                                   state.clear();
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(

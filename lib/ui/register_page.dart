@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/login_page.dart';
@@ -9,7 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   static const routeName = '/register';
-  const Register({Key? key}) : super(key: key);
+  final String? from;
+  const Register({Key? key, this.from}) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
@@ -148,7 +150,7 @@ class _RegisterState extends State<Register> {
                 TextButton(
                   child: const Text('Have an Account? Sign In'),
                   onPressed: () {
-                    Navigator.pushNamed(context, Login.routeName);
+                    Navigation.intent(Login.routeName, context);
                   },
                 ),
               ],

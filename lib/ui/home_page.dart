@@ -182,7 +182,7 @@ class _HomeState extends State<Home> {
   }
 
   searchPoll() async {
-    if (!await ConnectionHelper.checkConnection()) {
+    if (!await ConnectionHelper.checkConnection(context)) {
       return;
     }
     if (_searchController.text.isEmpty) {
@@ -198,20 +198,14 @@ class _HomeState extends State<Home> {
         if (value.size > 0) {
           PollModel pollModel = PollModel.fromDoc(value.docs[0]);
           if (pollModel.show == true) {
-            firestore
-                .collection("polls")
-                .doc(_searchController.text.toUpperCase())
-                .update({
-              'users': FieldValue.arrayUnion([widget.userModel.username])
-            });
             // const snackbar = SnackBar(
             //     content: Text("Voting code has been successfully reedemed"));
             // ScaffoldMessenger.of(context).showSnackBar(snackbar);
             _searchController.text = "";
-            Navigation.intentWithMultipleData(
-              DetailVote.routeName,
-              {'pollModel': pollModel, 'userModel': widget.userModel},
-            );
+            Navigation.intentWithData(
+                DetailVote.routeName + pollModel.id!,
+                {'pollModel': pollModel, 'userModel': widget.userModel},
+                context);
             return;
           } else {
             const snackbar =
@@ -338,7 +332,8 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                         child: Slidable(
                           child: TextButton(
                             onPressed: () async {
-                              if (!await ConnectionHelper.checkConnection()) {
+                              if (!await ConnectionHelper.checkConnection(
+                                  context)) {
                                 return;
                               } else {
                                 if (pollModel.end!.isBefore(detailNow) ||
@@ -351,30 +346,30 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                                         .collection("polls")
                                         .doc(id)
                                         .update({"show": false});
-                                    Navigation.intentWithMultipleData(
-                                      DetailVote.routeName,
-                                      {
-                                        'pollModel': pollModel,
-                                        'userModel': widget.userModel
-                                      },
-                                    );
+                                    Navigation.intentWithData(
+                                        DetailVote.routeName + pollModel.id!,
+                                        {
+                                          'pollModel': pollModel,
+                                          'userModel': widget.userModel
+                                        },
+                                        context);
                                   } else {
-                                    Navigation.intentWithMultipleData(
-                                      DetailVote.routeName,
-                                      {
-                                        'pollModel': pollModel,
-                                        'userModel': widget.userModel
-                                      },
-                                    );
+                                    Navigation.intentWithData(
+                                        DetailVote.routeName + pollModel.id!,
+                                        {
+                                          'pollModel': pollModel,
+                                          'userModel': widget.userModel
+                                        },
+                                        context);
                                   }
                                 } else {
-                                  Navigation.intentWithMultipleData(
-                                    DetailVote.routeName,
-                                    {
-                                      'pollModel': pollModel,
-                                      'userModel': widget.userModel
-                                    },
-                                  );
+                                  Navigation.intentWithData(
+                                      DetailVote.routeName + pollModel.id!,
+                                      {
+                                        'pollModel': pollModel,
+                                        'userModel': widget.userModel
+                                      },
+                                      context);
                                 }
                               }
                             },
@@ -441,7 +436,7 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                               SlidableAction(
                                 onPressed: (context) {
                                   Share.share(
-                                      "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${pollModel.id.toString()}",
+                                      "Let's vote on: \n'${pollModel.title}' poll \n\ngive your vote here: https://votie.mineversal.com/detailVote/${pollModel.id.toString()}",
                                       subject:
                                           "Download Votie now & use ${pollModel.id.toString()} to give your vote");
                                 },
@@ -559,7 +554,7 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                   content: Text(
                       "Polling has been successfully removed from your vote list"));
               ScaffoldMessenger.of(context).showSnackBar(snackbar);
-              Navigation.back();
+              Navigation.back(context);
             },
             style: TextButton.styleFrom(
               primary: Colors.white,

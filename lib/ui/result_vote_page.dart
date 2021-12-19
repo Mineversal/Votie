@@ -54,7 +54,7 @@ class ResultVote extends StatelessWidget {
                                   Icons.arrow_back,
                                   color: Colors.black,
                                 ),
-                                onPressed: () => (Navigation.back()),
+                                onPressed: () => (Navigation.back(context)),
                               ),
                               IconButton(
                                 icon: const Icon(
@@ -173,9 +173,9 @@ class ResultVote extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             Share.share(
-                                "Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${poll.id.toString()}",
+                                "Let's vote on: \n'${pollModel.title}' poll \n\ngive your vote here: https://votie.mineversal.com/#/detailVote/${pollModel.id.toString()}",
                                 subject:
-                                    "Download Votie now & use ${poll.id.toString()} to give your vote");
+                                    "Download Votie now & use ${pollModel.id.toString()} to give your vote");
                           },
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           child: Row(

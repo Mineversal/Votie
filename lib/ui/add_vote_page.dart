@@ -93,12 +93,14 @@ class AddVote extends StatelessWidget {
                                     bottom: 2.0, right: 20.0, left: 20.0),
                                 child: ElevatedButton(
                                   onPressed: () async {
-                                    if (!await ConnectionHelper
-                                        .checkConnection()) {
+                                    if (!await ConnectionHelper.checkConnection(
+                                        context)) {
                                       return;
                                     }
                                     Navigation.intentWithData(
-                                        CreateVote.routeName, userModel);
+                                        CreateVote.routeName,
+                                        userModel,
+                                        context);
                                   },
                                   child: const Text('Create Voting Now'),
                                   style: ElevatedButton.styleFrom(
@@ -255,7 +257,8 @@ class _ListYourVoteState extends State<ListYourVote> {
                           width: MediaQuery.of(context).size.width,
                           child: TextButton(
                             onPressed: () async {
-                              if (!await ConnectionHelper.checkConnection()) {
+                              if (!await ConnectionHelper.checkConnection(
+                                  context)) {
                                 return;
                               } else {
                                 if (pollModel.end!.isBefore(detailNow) ||
@@ -269,14 +272,18 @@ class _ListYourVoteState extends State<ListYourVote> {
                                         .doc(id)
                                         .update({"show": false});
                                     Navigation.intentWithData(
-                                        ResultVote.routeName, pollModel);
+                                        ResultVote.routeName,
+                                        pollModel,
+                                        context);
                                   } else {
                                     Navigation.intentWithData(
-                                        ResultVote.routeName, pollModel);
+                                        ResultVote.routeName,
+                                        pollModel,
+                                        context);
                                   }
                                 } else {
                                   Navigation.intentWithData(
-                                      ResultVote.routeName, pollModel);
+                                      ResultVote.routeName, pollModel, context);
                                 }
                               }
                             },

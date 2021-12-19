@@ -52,6 +52,7 @@ dependencies:
   ntp: ^2.0.0
   shimmer: ^2.0.0
   flutter_slidable: ^1.1.0
+  go_router: ^2.5.5
 
 dev_dependencies:
   flutter_test:
