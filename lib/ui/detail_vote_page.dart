@@ -8,6 +8,7 @@ import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/utils/dynamic_link_helper.dart';
 import 'package:votie/widget/list_options.dart';
 
 class DetailVote extends StatefulWidget {
@@ -148,9 +149,13 @@ class _DetailVoteState extends State<DetailVote> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {
-                            Share.share(
-                                "Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${widget.pollModel.id.toString()}",
+                          onPressed: () async {
+                            String url = await DynamicLinkHelper()
+                                .buildDynamicLink(
+                                    widget.pollModel.id.toString());
+                            Share.share("Click Here to Give Your Vote: \n$url",
+
+                                ///"Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${widget.pollModel.id.toString()}",
                                 subject:
                                     "Download Votie now & use ${widget.pollModel.id.toString()} to give your vote");
                           },

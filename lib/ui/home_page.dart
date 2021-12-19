@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/utils/dynamic_link_helper.dart';
 import 'package:votie/widget/shimmer_loading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -439,9 +440,14 @@ class _ListRecentVoteState extends State<ListRecentVote> {
                             motion: const ScrollMotion(),
                             children: [
                               SlidableAction(
-                                onPressed: (context) {
+                                onPressed: (context) async {
+                                  String url = await DynamicLinkHelper()
+                                      .buildDynamicLink(
+                                          pollModel.id.toString());
                                   Share.share(
-                                      "Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${pollModel.id.toString()}",
+                                      "Click Here to give your vote: \n$url",
+
+                                      ///"Download Votie now\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nUse this code to give your vote\n${pollModel.id.toString()}",
                                       subject:
                                           "Download Votie now & use ${pollModel.id.toString()} to give your vote");
                                 },
