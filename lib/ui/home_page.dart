@@ -12,6 +12,7 @@ import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
 import 'package:votie/widget/app_banner.dart';
+import 'package:votie/widget/qr_scanner.dart';
 import 'package:votie/widget/shimmer_loading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -145,6 +146,17 @@ class _HomeState extends State<Home> {
                                                 ),
                                               ),
                                             ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigation.intentWithData(
+                                                    QrScanner.routeName,
+                                                    widget.userModel,
+                                                    context);
+                                              },
+                                              icon: const Icon(
+                                                  Icons.qr_code_scanner,
+                                                  color: colorGray),
+                                            ),
                                             ElevatedButton(
                                               onPressed: () => searchPoll(),
                                               child: const Text('Enter'),
@@ -206,10 +218,7 @@ class _HomeState extends State<Home> {
             //     content: Text("Voting code has been successfully reedemed"));
             // ScaffoldMessenger.of(context).showSnackBar(snackbar);
             _searchController.text = "";
-            Navigation.intentWithData(
-                DetailVote.routeName + pollModel.id!,
-                {'pollModel': pollModel, 'userModel': widget.userModel},
-                context);
+            Navigation.intent(DetailVote.routeName + pollModel.id!, context);
             return;
           } else {
             const snackbar =

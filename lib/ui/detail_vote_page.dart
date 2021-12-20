@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:votie/common/navigation.dart';
@@ -14,6 +13,7 @@ import 'package:votie/utils/date_time_helper.dart';
 import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/list_options.dart';
 import 'package:votie/widget/not_found_page.dart';
+import 'package:votie/widget/qr_view.dart';
 
 class DetailVote extends StatefulWidget {
   static const routeName = '/detailVote/';
@@ -171,15 +171,11 @@ class _DetailVoteState extends State<DetailVote> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Clipboard.setData(ClipboardData(
-                                    text: pollModel.id.toString()))
-                                .then((_) {
-                              const snackbar = SnackBar(
-                                  content:
-                                      Text("Voting code copied successfully"));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackbar);
-                            });
+                            showQrDialog(
+                                context,
+                                pollModel.id ?? '',
+                                getColorByIndex(
+                                    pollModel.title!.codeUnitAt(0)));
                           },
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           child: Row(
@@ -192,7 +188,7 @@ class _DetailVoteState extends State<DetailVote> {
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 child: const Icon(
-                                  Icons.tag,
+                                  Icons.qr_code,
                                   color: colorGray,
                                 ),
                               ),
@@ -404,6 +400,64 @@ class _DetailVoteState extends State<DetailVote> {
           const SizedBox(width: 4),
         ],
       ),
+    );
+  }
+
+  void showQrDialog(BuildContext context, String votingCode, Color color) {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (_, __, ___) {
+        var height = MediaQuery.of(context).size.height;
+        return Scaffold(
+          body: Container(
+            height: height,
+            color: color,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => (Navigation.back(context)),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          left: 30, right: 30, top: height * 0.1),
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Expanded(
+                        child: QrView(
+                          votingCode: votingCode,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
+              .animate(anim),
+          child: child,
+        );
+      },
     );
   }
 

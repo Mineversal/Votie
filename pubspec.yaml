@@ -55,6 +55,8 @@ dependencies:
   go_router: ^2.5.5
   shared_preferences: ^2.0.11
   url_launcher: ^6.0.17
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.6.1
 
 dev_dependencies:
   flutter_test:

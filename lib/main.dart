@@ -19,6 +19,7 @@ import 'package:votie/ui/result_vote_page.dart';
 import 'package:provider/provider.dart';
 import 'package:votie/widget/no_connection_page.dart';
 import 'package:votie/widget/not_found_page.dart';
+import 'package:votie/widget/qr_scanner.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,6 +82,10 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: NoConnectionPage.routeName,
           builder: (context, state) => const NoConnectionPage(),
+        ),
+        GoRoute(
+          path: QrScanner.routeName,
+          builder: (context, state) => const QrScanner(),
         ),
       ],
       initialLocation:

@@ -62,5 +62,9 @@
 			</array>
 			</dict>
 		</array>
+		<key>io.flutter.embedded_views_preview</key>
+		<true/>
+		<key>NSCameraUsageDescription</key>
+		<string>This app needs camera access to scan QR codes</string>
 	</dict>
 </plist>
