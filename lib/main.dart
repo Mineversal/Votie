@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
+import 'package:votie/provider/app_banner_provider.dart';
 import 'package:votie/provider/create_vote_provider.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
 import 'package:votie/provider/result_vote_provider.dart';
@@ -86,7 +88,7 @@ class MyApp extends StatelessWidget {
               ? Login.routeName
               : Menu.routeName,
       redirect: (state) {
-        final user = FirebaseAuth.instance.currentUser ?? currentUser;
+        final user = FirebaseAuth.instance.currentUser;
         final goingToLogin = Uri.parse(state.location).path == '/login';
 
         final goingToRegister = Uri.parse(state.location).path == '/register';
@@ -118,6 +120,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ResultVoteProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              AppBannerProvider(sharedPref: SharedPreferences.getInstance()),
         ),
       ],
       child: MaterialApp.router(

@@ -12,6 +12,7 @@ import 'package:votie/ui/create_vote_page.dart';
 import 'package:votie/ui/result_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/shimmer_loading.dart';
 
 class AddVote extends StatelessWidget {
@@ -23,119 +24,124 @@ class AddVote extends StatelessWidget {
   Widget build(BuildContext context) {
     var paddingTop = MediaQuery.of(context).padding.top;
     return Scaffold(
-        body: CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          expandedHeight: 269.0 - paddingTop,
-          floating: false,
-          pinned: true,
-          elevation: 0.9,
-          toolbarHeight: 60,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          flexibleSpace: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              var top = constraints.biggest.height;
-              return FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
-                centerTitle: true,
-                title: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: top == MediaQuery.of(context).padding.top + 60
-                      ? 1.0
-                      : 0.0,
-                  child: Container(
-                    alignment: Alignment.bottomLeft,
-                    margin: const EdgeInsets.only(left: 20.0),
-                    child: Text(
-                      'Vote You Made',
-                      style: titleMediumBlack,
-                    ),
-                  ),
-                ),
-                background: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: SvgPicture.asset(
-                            'assets/images/bg_green.svg',
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        SafeArea(
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(
-                                    bottom: 2.0,
-                                    top: 10.0,
-                                    right: 20.0,
-                                    left: 20.0),
-                                child: Text(
-                                  'Start your voting campaign',
-                                  style: titleBoldWhite,
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(
-                                    bottom: 15.0, right: 20.0, left: 20.0),
-                                child: Text(
-                                  'And get best decision',
-                                  style: textMedium.apply(color: Colors.white),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(
-                                    bottom: 2.0, right: 20.0, left: 20.0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    if (!await ConnectionHelper.checkConnection(
-                                        context)) {
-                                      return;
-                                    }
-                                    Navigation.intentWithData(
-                                        CreateVote.routeName,
-                                        userModel,
-                                        context);
-                                  },
-                                  child: const Text('Create Voting Now'),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.white,
-                                    onPrimary: colorGreen,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(20.0),
-                      alignment: Alignment.centerLeft,
+      body: CustomScrollView(
+        slivers: [
+          const SliverToBoxAdapter(
+            child: AppBanner(),
+          ),
+          SliverAppBar(
+            expandedHeight: 269.0 - paddingTop,
+            floating: false,
+            pinned: true,
+            elevation: 0.9,
+            toolbarHeight: 60,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            flexibleSpace: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                var top = constraints.biggest.height;
+                return FlexibleSpaceBar(
+                  collapseMode: CollapseMode.pin,
+                  centerTitle: true,
+                  title: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: top == MediaQuery.of(context).padding.top + 60
+                        ? 1.0
+                        : 0.0,
+                    child: Container(
+                      alignment: Alignment.bottomLeft,
+                      margin: const EdgeInsets.only(left: 20.0),
                       child: Text(
                         'Vote You Made',
                         style: titleMediumBlack,
                       ),
                     ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                  background: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: SvgPicture.asset(
+                              'assets/images/bg_green.svg',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          SafeArea(
+                            child: Column(
+                              children: [
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  margin: const EdgeInsets.only(
+                                      bottom: 2.0,
+                                      top: 10.0,
+                                      right: 20.0,
+                                      left: 20.0),
+                                  child: Text(
+                                    'Start your voting campaign',
+                                    style: titleBoldWhite,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  margin: const EdgeInsets.only(
+                                      bottom: 15.0, right: 20.0, left: 20.0),
+                                  child: Text(
+                                    'And get best decision',
+                                    style:
+                                        textMedium.apply(color: Colors.white),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  margin: const EdgeInsets.only(
+                                      bottom: 2.0, right: 20.0, left: 20.0),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      if (!await ConnectionHelper
+                                          .checkConnection(context)) {
+                                        return;
+                                      }
+                                      Navigation.intentWithData(
+                                          CreateVote.routeName,
+                                          userModel,
+                                          context);
+                                    },
+                                    child: const Text('Create Voting Now'),
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.white,
+                                      onPrimary: colorGreen,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(20.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Vote You Made',
+                          style: titleMediumBlack,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          sliver: ListYourVote(
-            userModel: userModel,
-          ),
-        )
-      ],
-    ));
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            sliver: ListYourVote(
+              userModel: userModel,
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 

@@ -11,6 +11,7 @@ import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
 import 'package:votie/ui/menu_page.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/list_options.dart';
 import 'package:votie/widget/not_found_page.dart';
 
@@ -83,6 +84,9 @@ class _DetailVoteState extends State<DetailVote> {
           children: [
             CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(
+                  child: AppBanner(),
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:votie/ui/detail_vote_page.dart';
 import 'package:votie/utils/connection_helper.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/shimmer_loading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -32,6 +33,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
+          const SliverToBoxAdapter(
+            child: AppBanner(),
+          ),
           SliverAppBar(
             expandedHeight: 311.0,
             floating: false,

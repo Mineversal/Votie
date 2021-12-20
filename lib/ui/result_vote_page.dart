@@ -10,6 +10,7 @@ import 'package:votie/data/model/option_model.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/provider/result_vote_provider.dart';
 import 'package:votie/ui/menu_page.dart';
+import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/count_down_timer.dart';
 import 'package:votie/widget/list_options_result.dart';
 
@@ -41,6 +42,9 @@ class ResultVote extends StatelessWidget {
             );
             return CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(
+                  child: AppBanner(),
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [

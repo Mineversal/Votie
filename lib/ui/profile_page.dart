@@ -5,6 +5,7 @@ import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/login_page.dart';
+import 'package:votie/widget/app_banner.dart';
 
 class Profile extends StatelessWidget {
   final UserModel userModel;
@@ -17,6 +18,7 @@ class Profile extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const AppBanner(),
             Stack(
               children: [
                 SizedBox(
