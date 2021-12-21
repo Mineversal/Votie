@@ -24,6 +24,8 @@ Resource and illustration used on this project:
 - [Peach Illustration System](https://drawkit.com/product/peach-illustration-system), see license [here](https://drawkit.com/license)
 
 ### :man_technologist: Developed by Team CSD-049
+- [Dhiva Tiradika](https://github.com/dhivatiradika)
+- [Azhar Rizki Zulma](https://zulma.id)
 <!--- 
 A new Flutter project.
 
