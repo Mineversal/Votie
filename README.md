@@ -3,6 +3,9 @@
 ### 📊 Vote made easy
 Start your voting campaign and get best decision
 
+### 📚 How To Use
+Register, login, dan buat polling untuk menentukan keputusan terbaik
+
 ### 🛒 Dowload Here
 Google Play Store | Website Application | Amazon Appstore |
 :----------:|:----------:|:----------:|
