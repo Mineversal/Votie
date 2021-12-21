@@ -41,13 +41,15 @@ class _QrScannerState extends State<QrScanner> {
     return Scaffold(
       body: Stack(
         children: [
-          Expanded(
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
             ),
           ),
-          Expanded(
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
             child: Center(
               child: Shimmer.fromColors(
                   child: SizedBox(

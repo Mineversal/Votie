@@ -70,6 +70,19 @@ class _ListOptionsResultState extends State<ListOptionsResult> {
             .collection('options')
             .snapshots(),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SliverToBoxAdapter(
+              child: Container(
+                alignment: Alignment.center,
+                child: const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }
+
           var docs = snapshot.data != null ? snapshot.data!.docs : [];
           var options = docs.map((doc) => OptionModel.fromDoc(doc)).toList();
           Future.delayed(

@@ -438,10 +438,8 @@ class _DetailVoteState extends State<DetailVote> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      child: Expanded(
-                        child: QrView(
-                          votingCode: votingCode,
-                        ),
+                      child: QrView(
+                        votingCode: votingCode,
                       ),
                     ),
                   ],

@@ -31,6 +31,19 @@ class _ListOptionsState extends State<ListOptions> {
           .collection("options")
           .snapshots(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SliverToBoxAdapter(
+            child: Container(
+              alignment: Alignment.center,
+              child: const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
+        }
+
         if (snapshot.hasData) {
           var docs = snapshot.data!.docs;
           var options = docs.map((doc) => OptionModel.fromDoc(doc)).toList();
