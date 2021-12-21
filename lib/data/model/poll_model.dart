@@ -39,7 +39,7 @@ class PollModel {
       anonim: map['anonim'],
       multivote: map['multivote'],
       show: map['show'],
-      end: map['end'],
+      end: DateTimeHelper.timeStampToDateTime(map['end']),
       users: map['users'],
       voters: map['voters'],
     );

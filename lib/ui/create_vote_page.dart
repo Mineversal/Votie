@@ -10,6 +10,7 @@ import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/create_vote_provider.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/app_banner.dart';
 
 class CreateVote extends StatefulWidget {
   static const routeName = '/createVote';
@@ -109,6 +110,9 @@ class _CreateVoteState extends State<CreateVote> {
             state.userModel = widget.userModel;
             return CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(
+                  child: AppBanner(),
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
@@ -119,7 +123,7 @@ class _CreateVoteState extends State<CreateVote> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            Navigation.back();
+                            Navigation.back(context);
                             state.clear();
                           },
                         ),
@@ -376,7 +380,7 @@ class _CreateVoteState extends State<CreateVote> {
                                       _descController.text.toString(),
                                       _selectedDate,
                                       _optionsImage);
-                                  Navigation.back();
+                                  Navigation.back(context);
                                   state.clear();
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(

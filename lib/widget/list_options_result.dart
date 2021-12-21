@@ -39,7 +39,7 @@ class _ListOptionsResultState extends State<ListOptionsResult> {
                       Icons.arrow_back,
                       color: Colors.black,
                     ),
-                    onPressed: () => (Navigation.back()),
+                    onPressed: () => (Navigation.back(context)),
                   ),
                 ),
                 const Expanded(

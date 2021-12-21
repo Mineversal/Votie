@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:votie/common/navigation.dart';
@@ -7,30 +8,85 @@ import 'package:votie/common/style.dart';
 import 'package:votie/data/model/poll_model.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/provider/detail_vote_provider.dart';
+import 'package:votie/ui/menu_page.dart';
 import 'package:votie/utils/date_time_helper.dart';
+import 'package:votie/widget/app_banner.dart';
 import 'package:votie/widget/list_options.dart';
+import 'package:votie/widget/not_found_page.dart';
+import 'package:votie/widget/qr_view.dart';
 
 class DetailVote extends StatefulWidget {
-  static const routeName = '/detailVote';
-  final PollModel pollModel;
-  final UserModel userModel;
+  static const routeName = '/detailVote/';
+  final String pollId;
 
-  const DetailVote({Key? key, required this.pollModel, required this.userModel})
-      : super(key: key);
+  const DetailVote({Key? key, required this.pollId}) : super(key: key);
 
   @override
   _DetailVoteState createState() => _DetailVoteState();
 }
 
 class _DetailVoteState extends State<DetailVote> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel userModel = UserModel();
+  PollModel pollModel = PollModel();
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+    getPoll();
+  }
+
+  getUser() async {
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user!.uid)
+          .get()
+          .then((value) {
+        userModel = UserModel.fromMap(value.data());
+        setState(() {});
+      });
+    }
+  }
+
+  getPoll() async {
+    await FirebaseFirestore.instance
+        .collection("polls")
+        .doc(widget.pollId)
+        .get()
+        .then((value) {
+      pollModel = PollModel.fromMap(value.data());
+      setState(() {});
+    }).catchError((error) =>
+            Navigation.intentAndReplace(NotFoundPage.routeName, context));
+  }
+
+  addToUsers() {
+    FirebaseFirestore.instance.collection("polls").doc(widget.pollId).update({
+      'users': FieldValue.arrayUnion([userModel.username])
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (userModel.uid == null || pollModel.id == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    addToUsers();
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             CustomScrollView(
               slivers: [
+                const SliverToBoxAdapter(
+                  child: AppBanner(),
+                ),
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
@@ -42,7 +98,8 @@ class _DetailVoteState extends State<DetailVote> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            Navigation.back();
+                            Navigation.intentAndReplace(
+                                Menu.routeName, context);
                             Provider.of<DetailVoteProvider>(context,
                                     listen: false)
                                 .clear();
@@ -55,27 +112,26 @@ class _DetailVoteState extends State<DetailVote> {
                         child: Text(
                           'End on ' +
                               DateTimeHelper.formatDateTime(
-                                  widget.pollModel.end!,
-                                  "EE, dd MMM yyy HH':'mm'"),
+                                  pollModel.end!, "EE, dd MMM yyy HH':'mm'"),
                           style: textRegular.apply(
                               color: getColorByIndex(
-                                  widget.pollModel.title!.codeUnitAt(0))),
+                                  pollModel.title!.codeUnitAt(0))),
                         ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(
                             left: 20.0, right: 20.0, top: 10.0),
                         child: Text(
-                          widget.pollModel.title ?? '',
+                          pollModel.title ?? '',
                           style: textSemiBold,
                         ),
                       ),
-                      widget.pollModel.description != null
+                      pollModel.description != null
                           ? Container(
                               margin: const EdgeInsets.only(
                                   left: 20.0, right: 20.0, top: 18.0),
                               child: Text(
-                                widget.pollModel.description!,
+                                pollModel.description!,
                                 style: textRegular,
                               ),
                             )
@@ -104,7 +160,7 @@ class _DetailVoteState extends State<DetailVote> {
                             ),
                             Flexible(
                               child: Text(
-                                widget.pollModel.creator ?? '',
+                                pollModel.creator ?? '',
                                 style: textRegular.apply(color: Colors.black),
                                 maxLines: 1,
                                 overflow: TextOverflow.fade,
@@ -115,15 +171,11 @@ class _DetailVoteState extends State<DetailVote> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Clipboard.setData(ClipboardData(
-                                    text: widget.pollModel.id.toString()))
-                                .then((_) {
-                              const snackbar = SnackBar(
-                                  content:
-                                      Text("Voting code copied successfully"));
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackbar);
-                            });
+                            showQrDialog(
+                                context,
+                                pollModel.id ?? '',
+                                getColorByIndex(
+                                    pollModel.title!.codeUnitAt(0)));
                           },
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           child: Row(
@@ -136,12 +188,12 @@ class _DetailVoteState extends State<DetailVote> {
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 child: const Icon(
-                                  Icons.tag,
+                                  Icons.qr_code,
                                   color: colorGray,
                                 ),
                               ),
                               Text(
-                                widget.pollModel.id.toString(),
+                                pollModel.id.toString(),
                                 style: textRegular.apply(color: Colors.black),
                               )
                             ],
@@ -150,9 +202,9 @@ class _DetailVoteState extends State<DetailVote> {
                         TextButton(
                           onPressed: () {
                             Share.share(
-                                "Download Votie now on\n\nGoogle Play Store:\nhttps://play.google.com/store/apps/details?id=com.mineversal.votie\n\nAmazon Appstore:\nhttps://www.amazon.com/gp/product/B09NMXLJHM\n\nOr vote from our Web App:\nhttps://votie.mineversal.com\n\nUse this code to give your vote:\n${widget.pollModel.id.toString()}",
+                                "Let's vote on: \n'${pollModel.title}' poll \n\ngive your vote here: https://votie.mineversal.com/#/detailVote/${pollModel.id.toString()}",
                                 subject:
-                                    "Download Votie now & use ${widget.pollModel.id.toString()} to give your vote");
+                                    "Download Votie now & use ${pollModel.id.toString()} to give your vote");
                           },
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           child: Row(
@@ -176,7 +228,7 @@ class _DetailVoteState extends State<DetailVote> {
                             ],
                           ),
                         ),
-                        if (widget.pollModel.multivote!)
+                        if (pollModel.multivote!)
                           Row(
                             children: [
                               Container(
@@ -197,7 +249,7 @@ class _DetailVoteState extends State<DetailVote> {
                               )
                             ],
                           ),
-                        if (widget.pollModel.multivote!)
+                        if (pollModel.multivote!)
                           Row(
                             children: [
                               Container(
@@ -229,8 +281,8 @@ class _DetailVoteState extends State<DetailVote> {
                   ),
                 ),
                 ListOptions(
-                  pollModel: widget.pollModel,
-                  userModel: widget.userModel,
+                  pollModel: pollModel,
+                  userModel: userModel,
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate(
@@ -249,15 +301,15 @@ class _DetailVoteState extends State<DetailVote> {
               right: 0.0,
               child: Consumer<DetailVoteProvider>(
                 builder: (context, state, _) {
-                  return !state.getOptions.any((option) => option.voter!
-                              .contains(widget.userModel.username)) &&
-                          widget.pollModel.show == true
+                  return !state.getOptions.any((option) =>
+                              option.voter!.contains(userModel.username)) &&
+                          pollModel.show == true
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: state.getOptionStatus
                                     .any((option) => option != false)
                                 ? getColorByIndex(
-                                    widget.pollModel.title!.codeUnitAt(0),
+                                    pollModel.title!.codeUnitAt(0),
                                   )
                                 : colorGray,
                           ),
@@ -328,8 +380,7 @@ class _DetailVoteState extends State<DetailVote> {
             child: const Text("CONFIRM"),
             onPressed: () {
               try {
-                state.voteOption(
-                    widget.pollModel.id!, widget.userModel.username!);
+                state.voteOption(pollModel.id!, userModel.username!);
                 const snackbar = SnackBar(content: Text("Successfully vote"));
                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
                 Navigator.of(context).pop(false);
@@ -349,6 +400,64 @@ class _DetailVoteState extends State<DetailVote> {
           const SizedBox(width: 4),
         ],
       ),
+    );
+  }
+
+  void showQrDialog(BuildContext context, String votingCode, Color color) {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (_, __, ___) {
+        var height = MediaQuery.of(context).size.height;
+        return Scaffold(
+          body: Container(
+            height: height,
+            color: color,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => (Navigation.back(context)),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          left: 30, right: 30, top: height * 0.1),
+                      padding: const EdgeInsets.symmetric(vertical: 50),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Expanded(
+                        child: QrView(
+                          votingCode: votingCode,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: const Offset(0, 1), end: const Offset(0, 0))
+              .animate(anim),
+          child: child,
+        );
+      },
     );
   }
 

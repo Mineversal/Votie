@@ -5,6 +5,7 @@ import 'package:votie/common/navigation.dart';
 import 'package:votie/common/style.dart';
 import 'package:votie/data/model/user_model.dart';
 import 'package:votie/ui/login_page.dart';
+import 'package:votie/widget/app_banner.dart';
 
 class Profile extends StatelessWidget {
   final UserModel userModel;
@@ -17,6 +18,7 @@ class Profile extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const AppBanner(),
             Stack(
               children: [
                 SizedBox(
@@ -154,8 +156,8 @@ class Profile extends StatelessWidget {
           ElevatedButton(
             child: const Text("LOGOUT"),
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigation.intentAndReplace(Login.routeName);
+              await FirebaseAuth.instance.signOut().then((value) =>
+                  Navigation.intentAndReplace(Login.routeName, context));
             },
             style: TextButton.styleFrom(
               primary: Colors.white,
