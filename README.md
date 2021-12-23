@@ -14,7 +14,7 @@ Start your voting campaign and get best decision
 - Share voting code to your friends
 
 ### 📚 How To Use
-Register, login, dan buat polling untuk menentukan keputusan terbaik.
+Register, login, & create polling for get best decision.
 Or see video Tutorial [here](https://youtu.be/kSUnZ2RfAVc)
 
 ### 🛒 Dowload & Use Here
