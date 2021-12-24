@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ntp/ntp.dart';
@@ -146,17 +147,19 @@ class _HomeState extends State<Home> {
                                                 ),
                                               ),
                                             ),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigation.intentWithData(
-                                                    QrScanner.routeName,
-                                                    widget.userModel,
-                                                    context);
-                                              },
-                                              icon: const Icon(
-                                                  Icons.qr_code_scanner,
-                                                  color: colorGray),
-                                            ),
+                                            !kIsWeb
+                                                ? IconButton(
+                                                    onPressed: () {
+                                                      Navigation.intentWithData(
+                                                          QrScanner.routeName,
+                                                          widget.userModel,
+                                                          context);
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.qr_code_scanner,
+                                                        color: colorGray),
+                                                  )
+                                                : Container(),
                                             ElevatedButton(
                                               onPressed: () => searchPoll(),
                                               child: const Text('Enter'),
