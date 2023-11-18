@@ -1,4 +1,4 @@
-# <img src="https://mineversal.com/assets/img/votie.png" width=25/> Votie
+# <img src="https://mineversal.net/assets/img/votie.png" width=25/> Votie
 
 ### 📊 Vote made easy
 Start your voting campaign and get best decision
@@ -20,7 +20,7 @@ Or see video Tutorial [here](https://youtu.be/kSUnZ2RfAVc)
 ### 🛒 Dowload & Use Here
 Google Play Store | Website Application | Amazon Appstore |
 :----------:|:----------:|:----------:|
-<a href='https://play.google.com/store/apps/details?id=com.mineversal.votie&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=350/></a> | <a href='https://votie.mineversal.com'><img alt='Use it on Mineversal Website' src='https://mineversal.com/assets/img/mineversal.png' width=300/></a> | <a href='https://www.amazon.com/gp/product/B09NMXLJHM'><img alt='Get it on Amazon Appstore' src='https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-black.png' width=300/></a> |
+<a href='https://play.google.com/store/apps/details?id=com.mineversal.votie&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=350/></a> | <a href='https://votie.mineversal.com'><img alt='Use it on Mineversal Website' src='https://mineversal.net/assets/img/mineversal.png' width=300/></a> | <a href='https://www.amazon.com/gp/product/B09NMXLJHM'><img alt='Get it on Amazon Appstore' src='https://images-na.ssl-images-amazon.com/images/G/01/mobile-apps/devportal2/res/images/amazon-appstore-badge-english-black.png' width=300/></a> |
 
 ### 🖼️ Application Preview
 Home Page | Add Page | Create Poll | 
